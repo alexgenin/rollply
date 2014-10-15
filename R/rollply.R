@@ -36,7 +36,7 @@ rollply <- function(.data,
   # groups using ddply.
   if (has_groups(.rollvars)) {
     # Build new argument lists
-    args.grps <- as.list(match.call(),expand.dots=TRUE)
+    args.grps <- as.list(match.call(), expand.dots=TRUE)
     args.grps[['.rollvars']]  <- split_groups(.rollvars)[['vars']]
     args.grps[['.variables']] <- split_groups(.rollvars)[['groups']]
     return( do.call(ddply, args.grps, envir=parent.frame()) )
@@ -72,8 +72,8 @@ rollply <- function(.data,
   }
   
   # Do the work brah
-  result <- adply(mesh,1, 
-                  do_rollply, coords, wdw.size, .data, fun, lookup_fun, 
+  result <- adply(mesh,1,
+                  do_rollply, coords, wdw.size, .data, fun, lookup_fun,
                   ...)
   
   return( data.frame(mesh, result[,-1,drop=FALSE]) )
