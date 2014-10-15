@@ -5,6 +5,9 @@
 # 
 # 
 
+library(sp)
+data(meuse)
+
 
 # Parameters
 RW_LENGTH <- 1000
@@ -16,18 +19,23 @@ RW <- cumsum(RW) + runif(RW_LENGTH,0,4)
 RW[sample(length(RW),RW_NA_ADDED)] <- NA
 
 # Build input df
-RW <- data.frame(time=seq_along(RW), position=RW)
+RW <- data.frame(time=seq_along(RW), 
+                 x=rnorm(RW_LENGTH),
+                 y=rnorm(RW_LENGTH),
+                 position=RW,
+                 grp=ifelse(rnorm(RW_LENGTH)>0,'yes','no'))
 
 # Inspect input
-
-
 # Build moving average
-df <- rollply(RW, ~time, 
-              summarise, 
-              position=mean(position,na.rm=TRUE),
-              wdw=10,
-              npts=1000)
+.exportEnv()
+df <- rollply(meuse, ~ x+y, 100, 
+              function(dat) {  },
+              npts=30,
+              .progress='time',
+              .parallel=TRUE)
+qplot(x,y,fill=div,geom='tile',data=df)
 
 ggplot(RW,aes(time,position)) + 
-  geom_point() + 
+  facet_grid(~grp) + 
+  geom_point() + ??
   geom_line(data=df,color='red')

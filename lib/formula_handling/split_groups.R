@@ -30,5 +30,5 @@ split_groups <- function(form) {
 # definition
 has_groups <- function(form) {
   form_str <- paste(as.character(form),collapse='')
-  return( grepl('|',form_str) ) 
+  return( grepl('\\|',form_str) ) 
 }

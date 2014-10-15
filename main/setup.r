@@ -10,7 +10,7 @@
 ## ========================================================================== ##
 
 # Base directory. Providing an absolute path is heavily recommended
-.S_BASEDIR  <- '~/docs/work/2014-2015/Sierra-Meadows/ASS/src' 
+.S_BASEDIR  <- '~/info/R/rollply' 
 # Directory containing functions definitions
 .S_LIBDIR   <- './lib'
 # Directory containing variables definitions
@@ -26,26 +26,9 @@
 ##                      Packages to load at start                             ##
 ## ========================================================================== ##
 # Specify your favorite packages here
-.STARTPKGS <- c(# Multivariate analysis
-                'ade4',
-                # Graphics
-                'ggplot2',
-                'lattice',
-                'latticeExtra',
-                'RColorBrewer',
-                # Function compilation
-                'compiler',
-                # Ecology toolbox
-                'vegan',
-                # Statistics
-                'moments',
-                'picante', # for randomizeMatrix
-                # Data manipulation
-                'plyr',
-#                 'dplyr', # /!\ somewhat conflicts with plyr
-                'tidyr',
-                # Rendering of stuff
-                'rmarkdown')
+.STARTPKGS <- c('ggplot2',
+                'Rcpp',
+                'plyr')
 
 ## ========================================================================== ##
 ##                            Computing options                               ##
@@ -55,12 +38,12 @@
 # packages. They will be installed if necesary
 
 # Enable parallel computing ?
-.S_PARALLEL        <- ifelse(.S_HOSTNAME=='kefi118', TRUE, FALSE)
+.S_PARALLEL        <- TRUE
 
 # Number of cores to use ? Setting it to 'auto' will detect and use all the 
 # available cores.
 # Use only 2 for MDS on soniaserv as it duplicates a lot of stuff apparently.
-.S_PARALLEL.NCORES <- 12
+.S_PARALLEL.NCORES <- 2
 
 # Caching options
 .S_CACHE    <- TRUE 
@@ -69,7 +52,7 @@
 ## ========================================================================== ##
 ##                             Verbosity level                                ##
 ## ========================================================================== ##
-.S_VERBOSE  <- 4 # Set verbosity level 0-6e
+.S_VERBOSE  <- 4 # Set verbosity level 0-6
 
 ## ========================================================================== ##
 ##                             External tools                                 ##
