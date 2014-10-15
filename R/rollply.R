@@ -10,9 +10,13 @@
 # 
 # [1] https://github.com/hadley/plyr/issues/203
 # 
+# 
+
+
 #' Applies a function over a rolling window.
-# 
-# 
+#'
+#' @export
+
 rollply <- function(.data,
                     .rollvars,
                     wdw.size,
@@ -41,7 +45,7 @@ rollply <- function(.data,
   
   # We extract variables used for computing and build a matrix
   # <!todo!> Add check that variables used for rolling windows are numeric!
-  .rollvars.quoted <- as.quoted(.rollvars)
+  .rollvars.quoted <- plyr::as.quoted(.rollvars)
   coords <- lapply(.rollvars.quoted, eval, envir=.data)
   coords <- matrix(unlist(coords), 
                    ncol=length(.rollvars.quoted),
@@ -63,7 +67,7 @@ rollply <- function(.data,
   if (!is.matrix(mesh)) mesh <- as.matrix(mesh)
   
   # Get lookup function
-  lookup_fun <- lookup_one_dim
+  lookup_fun <- .lookup_one_dim
   if (ncol(coords) > 1) {
     lookup_fun <- lookup_multi_dim
   }

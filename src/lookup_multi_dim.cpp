@@ -1,8 +1,9 @@
-# 
-# 
-# We use Rcpp here because otherwise speed sucks.
+#include <Rcpp.h>
+using namespace Rcpp;
 
-cppFunction('
+// Looks up data comprised within our rolling window.
+//
+// [[Rcpp::export]]
 LogicalVector lookup_multi_dim(NumericMatrix current_coords, 
                                NumericMatrix coords,
                                double wdw) {
@@ -22,4 +23,5 @@ LogicalVector lookup_multi_dim(NumericMatrix current_coords,
     }
   }
   return out;
-}')
+}
+

@@ -6,6 +6,8 @@ Description: Applies an arbitrary function in a rolling window.
 Depends:
     R (>= 3.1.1)
 Imports:
-    plyr
+    plyr,
+    Rcpp
 License: GPL-2
 LazyData: true
+LinkingTo: Rcpp
