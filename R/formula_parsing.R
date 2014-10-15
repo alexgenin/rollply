@@ -3,19 +3,7 @@
 # Given a formula with a "|" in it, splits it into two formulas
 # 
 
-parse_roll_formula <- function(form) {
-  
-  
-  if (has_groups(form)) { 
-    output <- split_groups(form)
-  } else {
-    output <- list(vars=as.formula(paste0('~',form[2])),
-                   groups=NULL)
-  }
-  return(output)
-}
-
-split_groups <- function(form) {
+.split_groups <- function(form) {
   
   # Get string representation
   form_str <- as.character(form[[2]])
@@ -28,7 +16,7 @@ split_groups <- function(form) {
 
 # Function that tests if there are groups passed (finds a "|" in the formula
 # definition
-has_groups <- function(form) {
+.has_groups <- function(form) {
   form_str <- paste(as.character(form),collapse='')
   return( grepl('\\|',form_str) ) 
 }

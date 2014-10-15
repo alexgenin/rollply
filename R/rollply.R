@@ -2,19 +2,16 @@
 # 
 # rollply: applies a function on a data frame over a sliding window. Slow but
 #   generic.
-# Originally written by Alexandre Genin, 2014, stil uncomplete
-# 
-# Usage : rollply(.data,form,fun,npts)
-#   Arguments
-#       .data           a data.frame
-#       form            a formula of the form ~b|grp1+grp2
+# Originally written by Alexandre Genin, 2014, still uncomplete
 # 
 # Note: sometimes parallel computing fails saying that "..." is used in an 
 #   incorrect context. This has probably to do with [1] and is unfixed at the 
 #   moment.
 # 
-# 
 # [1] https://github.com/hadley/plyr/issues/203
+# 
+#' Applies a function over a rolling window.
+# 
 # 
 rollply <- function(.data,
                     .rollvars,
@@ -34,12 +31,12 @@ rollply <- function(.data,
   
   # Handle groups: if we provide groups, then we dispatch rollply within each
   # groups using ddply.
-  if (has_groups(.rollvars)) {
+  if (.has_groups(.rollvars)) {
     # Build new argument lists
     args.grps <- as.list(match.call(), expand.dots=TRUE)
-    args.grps[['.rollvars']]  <- split_groups(.rollvars)[['vars']]
-    args.grps[['.variables']] <- split_groups(.rollvars)[['groups']]
-    return( do.call(ddply, args.grps, envir=parent.frame()) )
+    args.grps[['.rollvars']]  <- .split_groups(.rollvars)[['vars']]
+    args.grps[['.variables']] <- .split_groups(.rollvars)[['groups']]
+    return( do.call(plyr::ddply, args.grps, envir=parent.frame()) )
   }
   
   # We extract variables used for computing and build a matrix
@@ -72,7 +69,7 @@ rollply <- function(.data,
   }
   
   # Do the work brah
-  result <- adply(mesh,1,
+  result <- plyr::adply(mesh,1,
                   do_rollply, coords, wdw.size, .data, fun, lookup_fun,
                   ...)
   
