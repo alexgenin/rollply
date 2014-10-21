@@ -37,7 +37,7 @@ ggplot(dat,aes(x,y,color=person)) +
   geom_point(alpha=.5, shape='+') + 
   geom_path(data=rollav) 
 
-ggsave('./examples/random_walk_groups.png', width=4, height=3)
+ggsave('./examples/random_walk_groups.png', width=6, height=5)
 
 
 # Where did people spend their time ?
@@ -49,4 +49,4 @@ ggplot(subset(rollav, time.spent>0)) +
   geom_point(aes(x,y, color=person, size=time.spent)) + 
   facet_grid(~person)
 
-ggsave('./examples/random_walk_time_spent.png', width=4, height=1)
+ggsave('./examples/random_walk_time_spent.png', width=10, height=4)
