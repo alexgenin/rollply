@@ -79,8 +79,7 @@ rollply <- function(.data,
   
   # Build output mesh
   if (is.null(mesh)) {
-    mesh <- expand.grid(build_mesh_seed(coords,mesh.res,pad),
-                        KEEP.OUT.ATTRS = FALSE)
+    mesh <- build_mesh(coords,mesh.res,pad)
   }
   if (!is.matrix(mesh)) mesh <- as.matrix(mesh)
   

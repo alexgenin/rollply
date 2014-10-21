@@ -1,7 +1,15 @@
 # 
 # Builds the mesh needed for rollply.
 # 
+# 
+#' @export
+#'
 
+build_mesh <- function(coords, npts, pad=0) { 
+  expand.grid(build_mesh_seed(coords, npts, pad), KEEP.OUT.ATTRS = FALSE)
+}
+
+# Builds a "seed" that is the set of coordinates to be fed to expand.grid
 build_mesh_seed <- function(coords,npts,pad) {
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)
