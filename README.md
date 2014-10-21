@@ -3,8 +3,8 @@ rollply
 
 Rollply is an R package built on top on plyr's **ply functions to make 
 moving-window based computations easier. Just provide a function that works on
-a data.frame, rollply will take care of slicing the dataset into appropriate
-subsets and apply that function to each of them. 
+a data.frame, rollply will take care of building the appropriate subsets and 
+apply that function to each of them. 
 
 Some packages for time series are out there that contain functions computing 
 moving averages (e.g. TTR::SMA), but were not flexible enough for my use and 
@@ -77,6 +77,7 @@ installation
  
  ```r
   install_github('alexgenin/rollply')
+  library(rollply)
  ```
  
 todo
