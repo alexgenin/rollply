@@ -3,6 +3,7 @@ using namespace Rcpp;
 
 // Looks up data comprised within our rolling window.
 //
+
 // [[Rcpp::export]]
 LogicalVector lookup_multi_dim(NumericMatrix current_coords, 
                                NumericMatrix coords,

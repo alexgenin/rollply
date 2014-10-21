@@ -13,23 +13,42 @@
 # 
 
 
-#' Applies a function over a rolling window.
-#'
+#' For each subset of a data.frame falling in a moving window, computes the 
+#' results of a function on this subset, then combine results in a data.frame.
+#' 
+#' @param .data data.frame to be processed
+#' @param .rollvars variables describing the moving window: a formula of the 
+#'                  form ~ a + b | c, where a and b denote the variables used 
+#'                  for the rolling window and c an eventual grouping 
+#' @param fun function to apply to each piece
+#' @param wdw.size window size
+#' @param mesh mesh of points at which the moving window is evaluated
+#' @param mesh.res if mesh is unspecified, then the number of points for the 
+#'                 resolution of the default mesh to build. Otherwise ignored.
+#' @param padding padding policy outside of data range, one of 'none', 
+#'                'outside', 'inside', or a numeric value
+#' @param .parallel whether to use parallel processing (see \link{ddply} for 
+#'                  more information on parallelism)
+#' @param ... other arguments passed first to ddply and/or adply, then to fun
+#' 
+#' @useDynLib rollply
+#' @importFrom Rcpp sourceCpp
 #' @export
 
 rollply <- function(.data,
                     .rollvars,
                     wdw.size,
                     fun,
-                    npts=200,
                     mesh=NULL,
+                    mesh.res=200,
                     padding='none', # outside/inside/none or value
                     .parallel=FALSE,
                     ...) {  # passed to fun
-  require(plyr)
   
   #<!todo!> add checks that variables are present in data.frame otherwise we 
   # will have wierd ass results due to lexical scoping.
+  stopifnot(all(all.vars(.rollvars) %in% names(.data)))
+  
   
   #<!todo!> We have trouble with summarise!
   
@@ -61,7 +80,7 @@ rollply <- function(.data,
   
   # Build output mesh
   if (is.null(mesh)) {
-    mesh <- expand.grid(build_mesh_seed(coords,npts,pad),
+    mesh <- expand.grid(build_mesh_seed(coords,mesh.res,pad),
                         KEEP.OUT.ATTRS = FALSE)
   }
   if (!is.matrix(mesh)) mesh <- as.matrix(mesh)
@@ -77,5 +96,5 @@ rollply <- function(.data,
                   do_rollply, coords, wdw.size, .data, fun, lookup_fun,
                   ...)
   
-  return( data.frame(mesh, result[,-1,drop=FALSE]) )
+  return( data.frame(mesh, result[ ,-1,drop=FALSE]) )
 }
