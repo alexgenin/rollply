@@ -5,6 +5,11 @@
 # 
 # 
 
+library(ggplot2)
+library(plyr)
+library(rollply)
+
+
 # Generate data
 dat <- data.frame(time=seq.int(1000),
                   position=cumsum(rnorm(1000,0,10)))
@@ -41,7 +46,7 @@ ggsave('./examples/random_walk_groups.png', width=6, height=5)
 
 # Where did people spend their time ?
 fixed_mesh <- build_mesh(dat[ ,c('x','y')], 5000) # we fix the mesh across groups
-rollav <- rollply(dat, ~ x + y | person, wdw.size=1, mesh=fixed_mesh,
+rollav <- rollply(dat, ~ x + y | person, wdw.size=2, mesh=fixed_mesh,
                   summarise, time.spent=length(time))
 
 ggplot(subset(rollav, time.spent>0)) + 

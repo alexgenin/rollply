@@ -15,6 +15,7 @@ In short, it allows writing something like this:
 
 ```r
 library(ggplot2)
+library(plyr)
 library(rollply)
 # Generate data
 dat <- data.frame(time=seq.int(1000),
