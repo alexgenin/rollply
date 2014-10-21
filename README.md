@@ -54,7 +54,7 @@ ggplot(dat,aes(x,y,color=person)) +
 ```r
 # Where did people spend their time ?
 fixed_mesh <- build_mesh(dat[ ,c('x','y')], 5000) # we fix the mesh across groups
-rollav <- rollply(dat, ~ x + y | person, wdw.size=10, mesh=fixed_mesh,
+rollav <- rollply(dat, ~ x + y | person, wdw.size=2, mesh=fixed_mesh,
                   summarise, time.spent=length(time))
 
 ggplot(subset(rollav, time.spent>0)) + 
