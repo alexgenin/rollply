@@ -58,8 +58,8 @@ rollav <- rollply(dat, ~ x + y | person, wdw.size=10, mesh=fixed_mesh,
                   summarise, time.spent=length(time))
 
 ggplot(subset(rollav, time.spent>0)) + 
-  geom_point(aes(x,y), size=1, shape='x') +
-  geom_point(aes(x,y, color=person, size=time.spent))
+  geom_point(aes(x,y, color=person, size=time.spent)) + 
+  facet_grid(~person)
 ```
 
 ![rollply_example: random walk with 2D window](/examples/random_walk_time_spent.png?raw=true "Time spent in each window")
