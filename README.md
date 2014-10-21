@@ -67,12 +67,14 @@ ggplot(subset(rollav, time.spent>0)) +
 
 installation 
 ----
- 1. Install devtools
+ 1/ Install devtools
+ 
  ```r
   install.packages('devtools')
   library(devtools)
  ```
- 2. Install rollply
+ 2/ Install rollply
+ 
  ```r
   install_github('alexgenin/rollply')
  ```
