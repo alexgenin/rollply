@@ -10,11 +10,11 @@ dat <- data.frame(time=seq.int(1000),
                   position=cumsum(rnorm(1000,0,10)))
 
 rollav <- rollply(dat, ~ time, wdw.size=10, 
-                  summarise, position.mean=mean(position))
+                  summarise, position=mean(position))
 
-ggplot() + 
-  geom_point(aes(time,position), data=dat) +
-  geom_line(aes(time,position.mean), color='red', data=rollav)
+ggplot(NULL,aes(time,position)) + 
+  geom_point(data=dat) +
+  geom_line(color='red', data=rollav)
 
 ggsave('./examples/random_walk.png', width=7, height=4)
 
@@ -37,7 +37,7 @@ ggplot(dat,aes(x,y,color=person)) +
   geom_point(alpha=.5, shape='+') + 
   geom_path(data=rollav) 
 
-ggsave('./examples/random_walk_groups.png', width=5, height=5)
+ggsave('./examples/random_walk_groups.png', width=4, height=4)
 
 
 # Where did people spend their time ?
@@ -49,4 +49,4 @@ ggplot(subset(rollav, time.spent>0)) +
   geom_point(aes(x,y), size=1, shape='x') +
   geom_point(aes(x,y, color=person, size=time.spent))
 
-ggsave('./examples/random_walk_time_spent.png', width=5, height=5)
+ggsave('./examples/random_walk_time_spent.png', width=4, height=4)

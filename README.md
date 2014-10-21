@@ -14,16 +14,18 @@ takes advantages on plyr's sugar (parallelism, progress report, etc.).
 In short, it allows writing something like this:
 
 ```r
+library(ggplot2)
+library(rollply)
 # Generate data
 dat <- data.frame(time=seq.int(1000),
                   position=cumsum(rnorm(1000,0,10)))
 
 rollav <- rollply(dat, ~ time, wdw.size=10, 
-                  summarise, position.mean=mean(position))
+                  summarise, position=mean(position))
 
-ggplot() + 
-  geom_point(aes(time,position), data=dat) +
-  geom_line(aes(time,position.mean), color='red', data=rollav)
+ggplot(NULL,aes(time,position)) + 
+  geom_point(data=dat) +
+  geom_line(color='red', data=rollav)
 ```
 
 ![rollply_example: random walk](/examples/random_walk.png?raw=true "Average of a 1D random walk")
@@ -50,6 +52,7 @@ ggplot(dat,aes(x,y,color=person)) +
 ![rollply_example: random walk with groups](/examples/random_walk_groups.png?raw=true "Average of 2D random walks")
 
 ```r
+# Where did people spend their time ?
 fixed_mesh <- build_mesh(dat[ ,c('x','y')], 5000) # we fix the mesh across groups
 rollav <- rollply(dat, ~ x + y | person, wdw.size=10, mesh=fixed_mesh,
                   summarise, time.spent=length(time))
@@ -58,5 +61,6 @@ ggplot(subset(rollav, time.spent>0)) +
   geom_point(aes(x,y), size=1, shape='x') +
   geom_point(aes(x,y, color=person, size=time.spent))
 ```
+
 ![rollply_example: random walk with 2D window](/examples/random_walk_time_spent.png?raw=true "Time spent in each window")
 
