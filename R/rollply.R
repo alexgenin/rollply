@@ -86,7 +86,7 @@ rollply <- function(.data,
   # Get lookup function
   lookup_fun <- .lookup_one_dim
   if (ncol(coords) > 1) {
-    lookup_fun <- lookup_multi_dim
+    lookup_fun <- rollply_lookup_multi_dim
   }
   
   # Do the work brah
