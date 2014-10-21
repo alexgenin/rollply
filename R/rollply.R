@@ -11,8 +11,8 @@
 # [1] https://github.com/hadley/plyr/issues/203
 # 
 # 
-
-
+# 
+# 
 #' For each subset of a data.frame falling in a moving window, computes the 
 #' results of a function on this subset, then combine results in a data.frame.
 #' 
@@ -34,7 +34,8 @@
 #' @useDynLib rollply
 #' @importFrom Rcpp sourceCpp
 #' @export
-
+# 
+# 
 rollply <- function(.data,
                     .rollvars,
                     wdw.size,
@@ -47,10 +48,8 @@ rollply <- function(.data,
   
   #<!todo!> add checks that variables are present in data.frame otherwise we 
   # will have wierd ass results due to lexical scoping.
-  stopifnot(all(all.vars(.rollvars) %in% names(.data)))
-  
-  
-  #<!todo!> We have trouble with summarise!
+  if (!all(all.vars(.rollvars) %in% names(.data))) 
+    stop('Required variables are not contained in supplied data.frame')
   
   # Handle groups: if we provide groups, then we dispatch rollply within each
   # groups using ddply.
