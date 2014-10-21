@@ -19,7 +19,6 @@ ggplot(NULL,aes(time,position)) +
 ggsave('./examples/random_walk.png', width=5, height=3)
 
 
-
 # Rollav with groups
 
 # Generate three 2D random walks

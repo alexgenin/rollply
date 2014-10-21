@@ -64,3 +64,22 @@ ggplot(subset(rollav, time.spent>0)) +
 
 ![rollply_example: random walk with 2D window](/examples/random_walk_time_spent.png?raw=true "Time spent in each window")
 
+
+installation 
+----
+ 1. Install devtools
+ ```r
+  install.packages('devtools')
+  library(devtools)
+ ```
+ 2. Install rollply
+ ```r
+  install_github('alexgenin/rollply')
+ ```
+ 
+todo
+----
+ - Allow other outputs (currently we only allow a data.frame output)
+ - The implementation of the mesh resolution requires more polishing
+ - Maybe implement the subset selection in C++ for 1D moving windows
+ - ?
