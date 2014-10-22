@@ -83,6 +83,7 @@ installation
  
 todo
 ----
+ - finish documenting !
  - Allow other outputs (currently we only allow a data.frame output)
  - The implementation of the mesh resolution requires more polishing
  - Maybe implement the subset selection in C++ for 1D moving windows
