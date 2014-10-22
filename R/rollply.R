@@ -84,7 +84,7 @@ rollply <- function(.data,
   if (!is.matrix(mesh)) mesh <- as.matrix(mesh)
   
   # Get lookup function
-  lookup_fun <- .lookup_one_dim
+  lookup_fun <- lookup_one_dim
   if (ncol(coords) > 1) {
     lookup_fun <- lookup_multi_dim
   }
