@@ -1,5 +1,6 @@
-#!/usr/bin/R
 # 
+
+
 # rollply: applies a function on a data frame over a sliding window. Slow but
 #   generic.
 # Originally written by Alexandre Genin, 2014, still uncomplete
@@ -10,9 +11,11 @@
 # 
 # [1] https://github.com/hadley/plyr/issues/203
 # 
-# 
-# 
-# 
+
+
+
+#' Rollply
+#'
 #' For each subset of a data.frame falling in a moving window, computes the 
 #' results of a function on this subset, then combine results in a data.frame.
 #' 
@@ -34,7 +37,6 @@
 #' @useDynLib rollply
 #' @importFrom Rcpp sourceCpp
 #' @export
-# 
 # 
 rollply <- function(.data,
                     .rollvars,
