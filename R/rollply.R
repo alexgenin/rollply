@@ -96,6 +96,11 @@ rollply <- function(.data,
                    ncol=length(.rollvars.quoted),
                    dimnames=list(NULL, names(.rollvars.quoted)))
   
+  # Check if NAs, and if yes then act
+  NA_lines <- apply(coords, 1, function(X) any(is.na(X)))
+  if (any(NA_lines)) 
+    stop('NA in moving window parameters are not supported. Try removing them.')
+  
   # Determine sides policy
   if (!is.numeric(padding)) {
     pad <- switch(padding,
