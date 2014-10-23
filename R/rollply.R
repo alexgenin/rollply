@@ -14,8 +14,9 @@
 
 
 
-#' Rollply
-#'
+#' @title Rollply
+#' 
+#' @description
 #' For each subset of a data.frame falling in a moving window, computes the 
 #' results of a function on this subset, then combine results in a data.frame.
 #' 
@@ -34,6 +35,28 @@
 #'                  more information on parallelism)
 #' @param ... other arguments passed first to ddply and/or adply, then to fun
 #' 
+#' @details
+#' Fill in.
+#' 
+#' 
+#' 
+#' @examples
+#' library(ggplot2)
+#' library(plyr)
+#' 
+#' # Generate 1D random walk
+#' dat <- data.frame(time=seq.int(1000),
+#'                   position=cumsum(rnorm(1000,0,10)))
+#' 
+#' rollav <- rollply(dat, ~ time, wdw.size=10, 
+#'                   summarise, position=mean(position))
+#' 
+#' ggplot(NULL,aes(time,position)) + 
+#'   geom_point(data=dat) +
+#'   geom_line(color='red', data=rollav)
+#' 
+#' 
+#' 
 #' @useDynLib rollply
 #' @importFrom Rcpp sourceCpp
 #' @export
@@ -44,6 +67,8 @@ rollply <- function(.data,
                     fun,
                     mesh=NULL,
                     mesh.res=200,
+                    mesh.type='grid_identical', # grid_identical, grid_proportional, polygon_fill
+                    mesh.options=NULL,
                     padding='none', # outside/inside/none or value
                     .parallel=FALSE,
                     ...) {  # passed to fun
@@ -81,7 +106,7 @@ rollply <- function(.data,
   
   # Build output mesh
   if (is.null(mesh)) {
-    mesh <- build_mesh(coords,mesh.res,pad)
+    mesh <- build_mesh(mesh.type, coords, mesh.res, pad, mesh.options)
   }
   if (!is.matrix(mesh)) mesh <- as.matrix(mesh)
   

@@ -4,7 +4,8 @@
 \title{Rollply}
 \usage{
 rollply(.data, .rollvars, wdw.size, fun, mesh = NULL, mesh.res = 200,
-  padding = "none", .parallel = FALSE, ...)
+  mesh.type = "grid_identical", mesh.options = NULL, padding = "none",
+  .parallel = FALSE, ...)
 }
 \arguments{
 \item{.data}{data.frame to be processed}
@@ -33,5 +34,23 @@ more information on parallelism)}
 \description{
 For each subset of a data.frame falling in a moving window, computes the
 results of a function on this subset, then combine results in a data.frame.
+}
+\details{
+Fill in.
+}
+\examples{
+library(ggplot2)
+library(plyr)
+
+# Generate 1D random walk
+dat <- data.frame(time=seq.int(1000),
+                  position=cumsum(rnorm(1000,0,10)))
+
+rollav <- rollply(dat, ~ time, wdw.size=10,
+                  summarise, position=mean(position))
+
+ggplot(NULL,aes(time,position)) +
+  geom_point(data=dat) +
+  geom_line(color='red', data=rollav)
 }
 
