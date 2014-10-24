@@ -1,7 +1,7 @@
 # 
 # 
 # 
-# @export
+#' @export
 
 build_mesh_polygon_fill <- function(coords, npts, pad=0, mesh.options=list(nb=5)) {
   
