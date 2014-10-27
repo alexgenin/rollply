@@ -8,7 +8,8 @@ Depends:
 Imports:
     plyr,
     Rcpp,
-    alphahull
+    alphahull,
+    scales
 License: GPL-2
 LazyData: true
 LinkingTo: Rcpp

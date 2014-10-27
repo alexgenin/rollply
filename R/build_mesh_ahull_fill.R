@@ -21,7 +21,7 @@ build_mesh_ahull_fill <- function(coords, npts,
   # NB: We rescale everything between 0 and 1 so the given alpha is easy to 
   #     interpret and inahull() works (it has trouble with far-from zero values
   #     it seems).
-  coords.scaled <- apply(coords, 2, rescale, to=c(0,1))
+  coords.scaled <- apply(coords, 2, scales::rescale, to=c(0,1))
   coords.hull <- alphahull::ahull(coords.scaled, alpha=opts[['alpha']])
   
   # Iterate to find the best proportional fitting 
