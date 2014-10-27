@@ -67,7 +67,7 @@ rollply <- function(.data,
                     fun,
                     mesh=NULL,
                     mesh.res=200,
-                    mesh.type='grid_identical', # grid_identical, grid_proportional, polygon_fill
+                    mesh.type='grid_identical', # grid_identical, grid_proportional, ahull_fill
                     mesh.options=NULL,
                     padding='none', # outside/inside/none or value
                     .parallel=FALSE,

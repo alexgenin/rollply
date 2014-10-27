@@ -29,9 +29,11 @@ mdw.id <- rollply(mdw, ~ lon + lat, .001, summarise,
                   meanvwc.mean = mean(meanvwc,na.rm=TRUE),
                   tcover.mean  = mean(tcover,na.rm=TRUE))
 
+mesh.pf <- build_mesh_ahull_fill(mdw[ ,c('lon','lat')], 10000, 
+                                 mesh.options=list(alpha=.2, error.tol=.05),
+                                 verbose=TRUE)
 mdw.pf <- rollply(mdw, ~ lon + lat, .001, summarise, 
-                  mesh.res=5000,
-                  mesh.type='polygon_fill',
+                  mesh=mesh.pf,
                   meanvwc.mean = mean(meanvwc,na.rm=TRUE),
                   tcover.mean  = mean(tcover,na.rm=TRUE),
                   .progress='time')
@@ -40,23 +42,20 @@ mdw.pf <- rollply(mdw, ~ lon + lat, .001, summarise,
 ggplot(NULL, aes(lon, lat)) +
 #   geom_point(data=mdw.sq, shape='+') +
 #   geom_point(data=mdw.id, shape=1) +
-  geom_point(data=mdw.pf, shape=1) +
+  geom_point(data=mdw.pf, shape='+') +
   geom_point(data=mdw, color='red') 
 
 ggplot(NULL, aes(lon, lat)) +
 #   geom_point(data=mdw.sq, shape='+') +
 #   geom_point(data=mdw.id, shape=1) +
-  geom_point(data=mdw, color='red') + 
-  geom_tile(aes(fill=tcover.mean),data=mdw.pf, shape=1)
+  geom_tile(aes(fill=tcover.mean),data=mdw.pf, shape=1) +
+  geom_point(data=mdw, color='red') 
 
 mdw.pf <- rollply(mdw, ~ lon + lat, .001, 
                   function(dat) { 
                     data.frame(pval=cor.test(~tcover+meanvwc,data=dat)$p.value)
                   },
-                  mesh.res=5000,
-                  mesh.type='polygon_fill',
+                  mesh=mesh.pf,
                   .progress='time')
 
 qplot(lon,lat,fill=pval,geom='tile',data=mdw.pf)
-
-      

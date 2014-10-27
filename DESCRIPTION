@@ -7,7 +7,8 @@ Depends:
     R (>= 3.1.1)
 Imports:
     plyr,
-    Rcpp
+    Rcpp,
+    alphahull
 License: GPL-2
 LazyData: true
 LinkingTo: Rcpp

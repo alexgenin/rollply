@@ -9,8 +9,9 @@ build_mesh <- function(type, ...) {
   
   mesh.genfun.name <- paste0('build_mesh_',type)
   
-  if (!exists(mesh.genfun.name)) 
+  if (!exists(mesh.genfun.name)) {
     stop('Unknown mesh type specified')
+  }
   
   mesh.genfun <- get(mesh.genfun.name)
   return(mesh.genfun(...))
