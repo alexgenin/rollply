@@ -15,4 +15,12 @@
     library(plyr, quietly=TRUE)
   }
   
+  # We load alphahull explicitely as it seems somehow badly designed: delvor
+  # does not find tri.pack() if the package is not explicitely loaded.
+  if (!"package:alphahull" %in% search()) {
+    R.methodsS3::pkgStartupMessage('Attaching package alphahull')
+    library(alphahull, quietly=TRUE)
+  }
+  
 }
+
