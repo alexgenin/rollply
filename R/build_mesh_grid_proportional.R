@@ -4,7 +4,8 @@
 
 #' @export
 build_mesh_grid_proportional <- function(coords, npts, pad=0, 
-                                         mesh.options=NULL) { 
+                                         mesh.options=NULL,
+                                         ...) {  # ignored
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)
   

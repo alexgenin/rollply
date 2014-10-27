@@ -45,9 +45,6 @@ build_mesh_ahull_fill <- function(coords, npts,
     mesh[ ,i] <- mesh[ ,i] * diff(range(coords[ ,i])) + min(coords[ ,i])
   }
   
-  if (verbose) {
-  }
-  
   return(mesh)
 }
 

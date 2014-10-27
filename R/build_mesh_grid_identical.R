@@ -4,7 +4,8 @@
 #' @export
 
 # Builds a "seed" that is the set of coordinates to be fed to expand.grid
-build_mesh_grid_identical <- function(coords, npts, pad=0, mesh.options=NULL) {
+build_mesh_grid_identical <- function(coords, npts, pad=0, mesh.options=NULL, 
+                                      ...) { # ignored
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)
   
