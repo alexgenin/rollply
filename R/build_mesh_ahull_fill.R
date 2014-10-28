@@ -21,6 +21,8 @@ build_mesh_ahull_fill <- function(coords, npts,
   # NB: We rescale everything between 0 and 1 so the given alpha is easy to 
   #     interpret and inahull() works (it has trouble with far-from zero values
   #     it seems).
+  # <!todo!> that introduces a bug in grid_proportional and gives it the 
+  # same behaviror than grid_proportional
   coords.scaled <- apply(coords, 2, scales::rescale, to=c(0,1))
   coords.hull <- alphahull::ahull(coords.scaled, alpha=opts[['alpha']])
   
@@ -52,7 +54,7 @@ get_mesh <- function(npts, coords, hull) {
   
   # Compute a grid with the given number of points
   grid.test <- build_mesh_grid_proportional(coords, npts)
-    
+  
   # Strip points and see how many are left
   to_keep <- apply(grid.test, 1, function(X) { alphahull::inahull(hull, X) })
   
