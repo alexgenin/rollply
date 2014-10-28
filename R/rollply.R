@@ -98,8 +98,9 @@ rollply <- function(.data,
   
   # Check if NAs, and if yes then act
   NA_lines <- apply(coords, 1, function(X) any(is.na(X)))
-  if (any(NA_lines)) 
+  if (any(NA_lines)) {
     stop('NA in moving window parameters are not supported. Try removing them.')
+  }
   
   # Determine sides policy
   if (!is.numeric(padding)) {
@@ -113,7 +114,7 @@ rollply <- function(.data,
   if (is.null(mesh)) {
     mesh <- build_mesh(mesh.type, coords, mesh.res, pad, mesh.options)
   }
-  if (!is.matrix(mesh)) mesh <- as.matrix(mesh)
+  if (!is.data.frame(mesh)) mesh <- data.frame(mesh)
   
   # Get lookup function
   lookup_fun <- lookup_one_dim
@@ -121,10 +122,13 @@ rollply <- function(.data,
     lookup_fun <- lookup_multi_dim
   }
   
-  # Do the work brah
-  result <- plyr::adply(mesh,1,
+  # Do the work brah.
+  # Note: we use ddply here as it has a more robust behaviour than adply, 
+  # (most notably when the inner function returns a data.frame with multiple
+  # lines).
+  result <- plyr::ddply(mesh,1,
                   do_rollply, coords, wdw.size, .data, fun, lookup_fun,
                   ...)
   
-  return( data.frame(mesh, result[ ,-1,drop=FALSE]) )
+  return( result )
 }
