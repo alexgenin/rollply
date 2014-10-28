@@ -1,7 +1,7 @@
 Package: rollply
 Title: Rolling-window add-on for plyr.
 Version: 0.2
-Authors@R: "Alexandre Génin <alex@lecairn.org> [aut, cre]"
+Authors@R: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
 Description: Applies an arbitrary function in a rolling window.
 Depends:
     R (>= 3.1.1)

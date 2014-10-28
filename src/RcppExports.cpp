@@ -5,9 +5,9 @@
 
 using namespace Rcpp;
 
-// lookup_multi_dim
-LogicalVector lookup_multi_dim(NumericMatrix current_coords, NumericMatrix coords, double wdw);
-RcppExport SEXP rollply_lookup_multi_dim(SEXP current_coordsSEXP, SEXP coordsSEXP, SEXP wdwSEXP) {
+// lookup_in_wdw
+LogicalVector lookup_in_wdw(NumericMatrix current_coords, NumericMatrix coords, double wdw);
+RcppExport SEXP rollply_lookup_in_wdw(SEXP current_coordsSEXP, SEXP coordsSEXP, SEXP wdwSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -15,7 +15,7 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< NumericMatrix >::type current_coords(current_coordsSEXP );
         Rcpp::traits::input_parameter< NumericMatrix >::type coords(coordsSEXP );
         Rcpp::traits::input_parameter< double >::type wdw(wdwSEXP );
-        LogicalVector __result = lookup_multi_dim(current_coords, coords, wdw);
+        LogicalVector __result = lookup_in_wdw(current_coords, coords, wdw);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

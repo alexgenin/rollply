@@ -75,8 +75,9 @@ rollply <- function(.data,
   
   #<!todo!> add checks that variables are present in data.frame otherwise we 
   # will have wierd ass results due to lexical scoping.
-  if (!all(all.vars(.rollvars) %in% names(.data))) 
+  if (!all(all.vars(.rollvars) %in% names(.data))) {
     stop('Required variables are not contained in supplied data.frame')
+  }
   
   # Handle groups: if we provide groups, then we dispatch rollply within each
   # groups using ddply.
@@ -92,6 +93,9 @@ rollply <- function(.data,
   # <!todo!> Add check that variables used for rolling windows are numeric!
   .rollvars.quoted <- plyr::as.quoted(.rollvars)
   coords <- lapply(.rollvars.quoted, eval, envir=.data)
+  if (any(!unlist(lapply(coords,is.numeric)))) { 
+    stop('Moving window parameters non-numeric.')
+  }
   coords <- matrix(unlist(coords), 
                    ncol=length(.rollvars.quoted),
                    dimnames=list(NULL, names(.rollvars.quoted)))
@@ -99,6 +103,8 @@ rollply <- function(.data,
   # Check if NAs, and if yes then act
   NA_lines <- apply(coords, 1, function(X) any(is.na(X)))
   if (any(NA_lines)) {
+    # We do not implement a removing of NAs as this would create a copy of 
+    # a potentially big dataset.
     stop('NA in moving window parameters are not supported. Try removing them.')
   }
   
@@ -120,8 +126,8 @@ rollply <- function(.data,
   # (most notably when the inner function returns a data.frame with multiple
   # lines).
   result <- plyr::ddply(mesh, names(mesh),
-                        do_rollply, coords, wdw.size, .data, fun, lookup_fun,
+                        do_rollply, coords, wdw.size, .data, fun,
                         ...)
   
-  return( result )
+  return(result)
 }
