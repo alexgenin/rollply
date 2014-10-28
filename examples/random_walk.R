@@ -15,7 +15,7 @@ dat <- data.frame(time=seq.int(1000),
                   position=cumsum(rnorm(1000,0,10)))
 
 rollav <- rollply(dat, ~ time, wdw.size=10, 
-                  summarise, position=mean(position))
+                  summarise, position=median(position))
 
 ggplot(NULL,aes(time,position)) + 
   geom_point(data=dat) +
@@ -23,8 +23,7 @@ ggplot(NULL,aes(time,position)) +
 
 # ggsave('./examples/random_walk.png', width=5, height=3)
 
-
-# Rollav with groups
+# Rollav with groups<
 
 # Generate three 2D random walks
 dat <- ddply(data.frame(person=c('françois','nicolas','jacques')), ~ person, 
@@ -45,7 +44,7 @@ ggplot(dat,aes(x,y,color=person)) +
 
 
 # Where did people spend their time ?
-fixed_mesh <- build_mesh(dat[ ,c('x','y')], 5000) # we fix the mesh across groups
+fixed_mesh <- build_mesh('ahull_crop', dat[ ,c('x','y')], 5000) # we fix the mesh across groups
 rollav <- rollply(dat, ~ x + y | person, wdw.size=2, mesh=fixed_mesh,
                   summarise, time.spent=length(time))
 
