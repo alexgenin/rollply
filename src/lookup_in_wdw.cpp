@@ -5,7 +5,7 @@ using namespace Rcpp;
 //
 
 // [[Rcpp::export]]
-LogicalVector lookup_multi_dim(NumericMatrix current_coords, 
+LogicalVector lookup_in_wdw(NumericMatrix current_coords, 
                                NumericMatrix coords,
                                double wdw) {
   int nrow = coords.nrow(), ncol = coords.ncol();

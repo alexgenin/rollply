@@ -26,19 +26,19 @@
 #'                  for the rolling window and c an eventual grouping 
 #' @param fun function to apply to each piece
 #' @param wdw.size window size
-#' @param mesh mesh of points at which the moving window is evaluated
+#' @param mesh data.frame of points at which the computation is done
 #' @param mesh.res if mesh is unspecified, then the number of points for the 
-#'                 resolution of the default mesh to build. Otherwise ignored.
+#'                 resolution of the mesh to build. Otherwise ignored.
 #' @param padding padding policy outside of data range, one of 'none', 
 #'                'outside', 'inside', or a numeric value
 #' @param .parallel whether to use parallel processing (see \link{ddply} for 
-#'                  more information on parallelism)
-#' @param ... other arguments passed first to ddply and/or adply, then to fun
+#'                  more information on parallelism). 
+#' @param ... other arguments passed to ddply and fun
 #' 
 #' @details
-#' Fill in.
 #' 
-#' 
+#' Rollply uses internally ddply on the provided or automatically built mesh. 
+#' The mesh can be predefined
 #' 
 #' @examples
 #' library(ggplot2)
@@ -55,7 +55,7 @@
 #'   geom_point(data=dat) +
 #'   geom_line(color='red', data=rollav)
 #' 
-#' 
+#' # see http://github.com/alexgenin/rollply for more examples
 #' 
 #' @useDynLib rollply
 #' @importFrom Rcpp sourceCpp
@@ -114,21 +114,14 @@ rollply <- function(.data,
   if (is.null(mesh)) {
     mesh <- build_mesh(mesh.type, coords, mesh.res, pad, mesh.options)
   }
-  if (!is.data.frame(mesh)) mesh <- data.frame(mesh)
-  
-  # Get lookup function
-  lookup_fun <- lookup_one_dim
-  if (ncol(coords) > 1) {
-    lookup_fun <- lookup_multi_dim
-  }
   
   # Do the work brah.
   # Note: we use ddply here as it has a more robust behaviour than adply, 
   # (most notably when the inner function returns a data.frame with multiple
   # lines).
-  result <- plyr::ddply(mesh,1,
-                  do_rollply, coords, wdw.size, .data, fun, lookup_fun,
-                  ...)
+  result <- plyr::ddply(mesh, names(mesh),
+                        do_rollply, coords, wdw.size, .data, fun, lookup_fun,
+                        ...)
   
   return( result )
 }

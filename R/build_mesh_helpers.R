@@ -14,7 +14,7 @@ build_mesh <- function(type, ...) {
   }
   
   mesh.genfun <- get(mesh.genfun.name)
-  return(mesh.genfun(...))
+  return(as.data.frame(mesh.genfun(...)))
 }
 
 # Builds a set of points equally spaced, taking pad into account

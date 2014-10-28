@@ -18,25 +18,26 @@ for the rolling window and c an eventual grouping}
 
 \item{fun}{function to apply to each piece}
 
-\item{mesh}{mesh of points at which the moving window is evaluated}
+\item{mesh}{data.frame of points at which the computation is done}
 
 \item{mesh.res}{if mesh is unspecified, then the number of points for the
-resolution of the default mesh to build. Otherwise ignored.}
+resolution of the mesh to build. Otherwise ignored.}
 
 \item{padding}{padding policy outside of data range, one of 'none',
 'outside', 'inside', or a numeric value}
 
 \item{.parallel}{whether to use parallel processing (see \link{ddply} for
-more information on parallelism)}
+more information on parallelism).}
 
-\item{...}{other arguments passed first to ddply and/or adply, then to fun}
+\item{...}{other arguments passed to ddply and fun}
 }
 \description{
 For each subset of a data.frame falling in a moving window, computes the
 results of a function on this subset, then combine results in a data.frame.
 }
 \details{
-Fill in.
+Rollply uses internally ddply on the provided or automatically built mesh.
+The mesh can be predefined
 }
 \examples{
 library(ggplot2)
@@ -52,5 +53,7 @@ rollav <- rollply(dat, ~ time, wdw.size=10,
 ggplot(NULL,aes(time,position)) +
   geom_point(data=dat) +
   geom_line(color='red', data=rollav)
+
+# see http://github.com/alexgenin/rollply for more examples
 }
 
