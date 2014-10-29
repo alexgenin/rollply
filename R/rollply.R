@@ -75,8 +75,8 @@ rollply <- function(.data,
   
   #<!todo!> add checks that variables are present in data.frame otherwise we 
   # will have wierd ass results due to lexical scoping.
-  if (!all(all.vars(.rollvars) %in% names(.data))) {
-    stop('Required variables are not contained in supplied data.frame')
+  if (!all(all.vars(.rollvars) %in% c(names(mesh),names(.data)))) {
+    stop('Required variables are not contained in supplied mesh and/or data.frame')
   }
   
   # Handle groups: if we provide groups, then we dispatch rollply within each
