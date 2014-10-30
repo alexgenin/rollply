@@ -40,9 +40,6 @@ Rollply uses internally ddply on the provided or automatically built mesh.
 The mesh can be predefined
 }
 \examples{
-library(ggplot2)
-library(plyr)
-
 # Generate 1D random walk
 dat <- data.frame(time=seq.int(1000),
                   position=cumsum(rnorm(1000,0,10)))
@@ -50,9 +47,9 @@ dat <- data.frame(time=seq.int(1000),
 rollav <- rollply(dat, ~ time, wdw.size=10,
                   summarise, position=mean(position))
 
-ggplot(NULL,aes(time,position)) +
-  geom_point(data=dat) +
-  geom_line(color='red', data=rollav)
+plot(position ~ time, data=dat)
+lines(rollav, col='red')
+
 
 # see http://github.com/alexgenin/rollply for more examples
 }
