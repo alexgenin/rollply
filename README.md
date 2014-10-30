@@ -68,6 +68,8 @@ ggplot(subset(rollav, time.spent>0)) +
 
 installation 
 ----
+
+From github: 
  1/ Install devtools
  
  ```r
@@ -80,7 +82,16 @@ installation
   install_github('alexgenin/rollply')
   library(rollply)
  ```
- 
+
+Rollply is also available through R-forge, which might be a better options for
+windows users: 
+ ```{r}
+  install.packages("rollply", repos="http://R-Forge.R-project.org")
+ ```
+
+Rollply is still under heavy development so please be patient in case of 
+breakage !
+
 todo
 ----
  - finish documenting !
