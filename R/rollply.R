@@ -73,7 +73,7 @@ rollply <- function(.data,
   
   #<!todo!> add checks that variables are present in data.frame otherwise we 
   # will have wierd ass results due to lexical scoping.
-  check_vars(.rollvars, names(.data), names(mesh), mesh.type)
+  check_vars(.rollvars, names(.data), names(mesh), mesh.type, mesh)
   
   # Handle groups: if we provide groups, then we dispatch rollply within each
   # groups using ddply.
