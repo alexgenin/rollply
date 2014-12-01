@@ -9,7 +9,8 @@ Imports:
     plyr,
     Rcpp,
     alphahull,
-    scales
+    scales,
+    formulr
 License: GPL-2
 LazyData: true
 LinkingTo: Rcpp
