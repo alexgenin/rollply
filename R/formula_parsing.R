@@ -3,7 +3,9 @@
 # Given a formula with a "|" in it, splits it into two formulas
 # 
 
-.split_groups <- function(form) {
+#'@export
+
+split_groups <- function(form) {
   
   # Get string representation
   form_str <- as.character(form[[2]])
@@ -16,7 +18,7 @@
 
 # Function that tests if there are groups passed (finds a "|" in the formula
 # definition
-.has_groups <- function(form) {
+has_groups <- function(form) {
   form_str <- paste(as.character(form),collapse='')
   return( grepl('\\|',form_str) ) 
 }

@@ -58,14 +58,14 @@
 #' @useDynLib rollply
 #' @importFrom Rcpp sourceCpp
 #' @export
-# 
+#'
 rollply <- function(.data,
                     .rollvars,
                     wdw.size,
                     fun,
                     mesh=NULL,
                     mesh.res=200,
-                    mesh.type='grid_identical', # grid_identical, grid_proportional, ahull_fill
+                    mesh.type='grid_identical', # grid_identical, grid_proportional, ahull_crop, ahull_fill
                     mesh.options=NULL,
                     padding='none', # outside/inside/none or value
                     .parallel=FALSE,
@@ -77,11 +77,11 @@ rollply <- function(.data,
   
   # Handle groups: if we provide groups, then we dispatch rollply within each
   # groups using ddply.
-  if (.has_groups(.rollvars)) {
+  if (has_groups(.rollvars)) {
     # Build new argument lists
     args.grps <- as.list(match.call(), expand.dots=TRUE)
-    args.grps[['.rollvars']]  <- .split_groups(.rollvars)[['vars']]
-    args.grps[['.variables']] <- .split_groups(.rollvars)[['groups']]
+    args.grps[['.rollvars']]  <- split_groups(.rollvars)[['vars']]
+    args.grps[['.variables']] <- split_groups(.rollvars)[['groups']]
     return( do.call(plyr::ddply, args.grps, envir=parent.frame()) )
   }
   
