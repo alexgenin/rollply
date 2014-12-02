@@ -78,11 +78,11 @@ rollply <- function(.data,
   
   # Handle groups: if we provide groups, then we dispatch rollply within each
   # groups using ddply.
-  if (formulr::has_groups(.rollvars)) {
+  if (formulr::has.g(.rollvars)) {
     # Build new argument list
     args.grps <- as.list(match.call(), expand.dots=TRUE)
     # Make .variables used by ddply
-    args.grps[['.variables']] <- form.g(.rollvars) # grabbed by ddply
+    args.grps[['.variables']] <- formulr::form.g(.rollvars) # grabbed by ddply
     # Update rollvars
     form.g(.rollvars) <- NA
     args.grps[['.rollvars']]  <- .rollvars 
