@@ -5,19 +5,17 @@
 # 
 
 
-check_vars <- function(.rollvars, 
+check_args <- function(.rollvars, 
                        .data_names, 
                        mesh_names, 
                        mesh.type, 
                        mesh) { 
-  if ( !all(all.vars(.rollvars) %in% .data_names) ) 
-    stop('Some variables could not be found in supplied data.frame')
   
   # Check for proper mesh type
   if (!exists(paste0('build_mesh_',mesh.type))) 
     stop('Unknown mesh type. See ?build.mesh for a list of supported mesh types')
   
   # Check if the mesh is a named data.frame
-  if (is.null(names(mesh)) || !is.data.frame(mesh))
+  if ( !is.null(mesh) && (is.null(names(mesh)) || !is.data.frame(mesh)) )
     stop('The supplied mesh must be a named data.frame')
 }
