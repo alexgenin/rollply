@@ -66,21 +66,22 @@ ggplot(subset(rollav, time.spent>0)) +
 ![rollply_example: random walk with 2D window](/examples/random_walk_time_spent.png?raw=true "Time spent in each window")
 
 
-installation 
+Installation 
 ----
 
- - From github: 
+ - From github (recommended): 
  
  ```r
   install.packages('devtools')
   library(devtools)
+  install_github('alexgenin/formulr')
   install_github('alexgenin/rollply')
   library(rollply)
  ```
 
  - Rollply is also available through R-forge, which might be a better options for
 windows users: 
-  
+
  ```{r}
   install.packages("rollply", repos="http://R-Forge.R-project.org")
  ```

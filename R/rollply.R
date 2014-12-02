@@ -98,7 +98,7 @@ rollply <- function(.data,
   # Check if NAs, and if yes then act
   NA_lines <- apply(coords, 1, function(X) any(is.na(X)))
   if (any(NA_lines)) {
-    # We do not implement a removing of NAs as this would create a copy of 
+    # We do not remove NAs as this would create a copy of 
     # a potentially big dataset.
     stop('NA in moving window parameters are not supported. Try removing them.')
   }
