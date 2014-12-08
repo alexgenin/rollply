@@ -6,8 +6,8 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 LogicalVector lookup_in_wdw(NumericMatrix current_coords, 
-                               NumericMatrix coords,
-                               double wdw) {
+                            NumericMatrix coords,
+                            double wdw) {
   int nrow = coords.nrow(), ncol = coords.ncol();
   LogicalVector out(nrow);
   

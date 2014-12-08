@@ -74,7 +74,7 @@ rollply <- function(.data,
   
   #<!todo!> add checks that variables are present in data.frame otherwise we 
   # will have wierd ass results due to lexical scoping.
-  check_args(.rollvars, .data, mesh, mesh.type, mesh)
+  check_args(.rollvars, .data, mesh, mesh.type)
   
   # Handle groups: if we provide groups, then we dispatch rollply within each
   # groups using ddply.
@@ -84,7 +84,7 @@ rollply <- function(.data,
     # Make .variables used by ddply
     args.grps[['.variables']] <- formulr::form.g(.rollvars) # grabbed by ddply
     # Update rollvars
-    form.g(.rollvars) <- NA
+    formulr::form.g(.rollvars) <- NA
     args.grps[['.rollvars']]  <- .rollvars 
     # Call ddply
     return( do.call(plyr::ddply, args.grps, envir=parent.frame()) )
