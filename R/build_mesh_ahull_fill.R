@@ -22,7 +22,7 @@ build_mesh_ahull_fill <- function(coords, npts,
   #     interpret and inahull() works (it has trouble with far-from zero values
   #     it seems).
   # <!todo!> that introduces a bug in grid_proportional and gives it the 
-  # same behaviror than grid_proportional
+  # same behavior than grid_proportional
   coords.scaled <- apply(coords, 2, scales::rescale, to=c(0,1))
   coords.hull <- alphahull::ahull(coords.scaled, alpha=opts[['alpha']])
   
