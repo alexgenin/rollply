@@ -5,7 +5,7 @@
 \usage{
 rollply(.data, .rollvars, wdw.size, fun, mesh = NULL, mesh.res = 200,
   mesh.type = "grid_identical", mesh.options = NULL, padding = "none",
-  .parallel = FALSE, ...)
+  .parallel = FALSE, .use.data.table = TRUE, ...)
 }
 \arguments{
 \item{.data}{data.frame to be processed}

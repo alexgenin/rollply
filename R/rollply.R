@@ -68,6 +68,7 @@ rollply <- function(.data,
                     mesh.options=NULL,
                     padding='none', # outside/inside/none or value
                     .parallel=FALSE,
+                    .use.data.table=TRUE,
                     ...) {  # passed to fun
   
   .rollvars <- formulr::as.formulr(.rollvars)
@@ -114,6 +115,11 @@ rollply <- function(.data,
   # Build output mesh
   if (is.null(mesh)) {
     mesh <- build_mesh(mesh.type, coords, mesh.res, pad, mesh.options)
+  }
+  
+  # Use data.table if asked for 
+  if (.use.data.table) { 
+    .data <- data.table::setDT(.data) # does not make a copy
   }
   
   # Do the work brah.
