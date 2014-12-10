@@ -30,6 +30,8 @@ build_mesh_ahull_fill <- function(coords, npts,
     stop('This type of mesh is only implemented for 2 dimensions.')
   
   # Take parameters into account
+  browser()
+  opts <- list(alpha=.3, error.tol=.05, run.max=20)
   opts[names(mesh.opts)] <- mesh.opts # alter defaults
   
   # We build an alpha hull of our x/y points.
@@ -58,6 +60,7 @@ build_mesh_ahull_fill <- function(coords, npts,
   }
   
   # Scale back to original size
+  browser()
   for (i in seq.int(ncol(coords))) {
     mesh[ ,i] <- mesh[ ,i] * diff(range(coords[ ,i])) + min(coords[ ,i])
   }
