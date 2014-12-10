@@ -1,10 +1,22 @@
-# 
-# 
-# 
+#'
+#' @title Create a grid with a number of points on each dimension 
+#'        proportional to the length of that dimension.
+#'
+#' @param coords A matrix or data.frame of coordinates with two columns
+#' @param npts The approximate total number of points of the output grid 
+#' @param pad Padding on each dimension (a positive number makes a grid
+#'            that is larger than the ranges of the coordinates).
+#' @param ... other arguments are silently ignored
+#' 
+#' @return The coordinates of a grid of points as a \code{data.frame} with 
+#'         approximately \code{npts} rows and \code{ncol(coords)} columns.
+#' 
+#' @family mesh building functions
+#' 
+#'@export
 
 #' @export
 build_mesh_grid_proportional <- function(coords, npts, pad=0, 
-                                         mesh.options=NULL,
                                          ...) {  # ignored
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)

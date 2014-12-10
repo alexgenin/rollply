@@ -1,10 +1,22 @@
+#'
+#' @title Create a grid with the same number of points on each dimension.
+#'
+#' @param coords A matrix or data.frame of coordinates
+#' @param npts The approximate total number of points of the output grid 
+#' @param pad Padding on each dimension (a positive number makes a grid
+#'            that is larger than the ranges of the coordinates).
+#' @param ... other arguments are silently ignored
+#'
+#' @return The coordinates of a regulary spaced grid of points as a 
+#'         \code{data.frame} with approximately \code{npts} rows and 
+#'         \code{ncol(coords)} columns.
+#'
+#' @family mesh builders
+#' 
+#'@export
 # 
-# Builds the mesh needed for rollply.
-# 
-#' @export
 
-# Builds a "seed" that is the set of coordinates to be fed to expand.grid
-build_mesh_grid_identical <- function(coords, npts, pad=0, mesh.options=NULL, 
+build_mesh_grid_identical <- function(coords, npts, pad=0, 
                                       ...) { # ignored
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)

@@ -1,12 +1,28 @@
-# 
+#'
+#' @title Create a grid within the alpha hull of a set of points.
+#' 
+#' @param coords A matrix or data.frame of coordinates with two columns
+#' @param npts The approximate number of points of the requested grid
+#' @param mesh.opts A list with component \code{alpha} that controls the 
+#'                     shape of the alpha hull, \code{error.tol} the error
+#'                     tolerance (in percentage) on the number of points and 
+#'                     \code{run.max} the maximum number of iterations.
+#' @param verbose Show plots of the grid being built
+#' @param ... other arguments are silently ignored
+#' 
+#' @return The coordinates of a grid of points as a \code{data.frame} with 
+#'         approximately \code{npts} rows and \code{ncol(coords)} columns.
+#' 
+#' @family mesh building functions
+#' 
 #' @export
 
 # Requires splancs
 
 build_mesh_ahull_fill <- function(coords, npts, 
-                                  pad=0,  # silently ignored
-                                  mesh.opts=NULL,
-                                  verbose=FALSE) {
+                                  mesh.opts=list(alpha=.3, error.tol=.05, run.max=20),
+                                  verbose=FALSE,
+                                  ...) {
   
   coords <- coords[!duplicated(coords), ]
   
@@ -14,14 +30,13 @@ build_mesh_ahull_fill <- function(coords, npts,
     stop('This type of mesh is only implemented for 2 dimensions.')
   
   # Take parameters into account
-  opts <- list(alpha=.3, error.tol=.05, run.max=10) # defaults
   opts[names(mesh.opts)] <- mesh.opts # alter defaults
   
   # We build an alpha hull of our x/y points.
   # NB: We rescale everything between 0 and 1 so the given alpha is easy to 
   #     interpret and inahull() works (it has trouble with far-from zero values
   #     it seems).
-  # <!todo!> that introduces a bug in grid_proportional and gives it the 
+  # <!todo!> this introduces a bug in grid_proportional and gives it the 
   # same behavior than grid_proportional
   coords.scaled <- apply(coords, 2, scales::rescale, to=c(0,1))
   coords.hull <- alphahull::ahull(coords.scaled, alpha=opts[['alpha']])
@@ -62,10 +77,10 @@ get_mesh <- function(npts, coords, hull) {
   return( grid.test[to_keep, ] )
 }
 
+# Makes an output with a plot
 verbose.plot <- function(hull, mesh, error, run) {
   plot(hull)
   points(mesh, col='red', pch=3)
   title(paste0('run ', run, ' (error: ', 
                paste0(round(error*100)), '%)', sep=''))
-
 }
