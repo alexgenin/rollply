@@ -13,7 +13,6 @@
 #' 
 #' @family grid building functions
 #' 
-#'@export
 
 #' @export
 build_grid_proportional <- function(coords, npts, pad=0, 
