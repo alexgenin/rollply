@@ -18,7 +18,7 @@ build_grid_ahull_crop <- function(coords, npts,
                                   grid.opts=list(alpha=.3),
                                   verbose=FALSE,
                                   ...) {
-  build_grid_ahull_fill(coords, npts, pad, 
+  build_grid_ahull_fill(coords, npts, 
                         grid.opts=c(grid.opts, list(run.max=1)), 
                         verbose)
 }

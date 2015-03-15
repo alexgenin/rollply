@@ -60,7 +60,7 @@ build_grid_ahull_fill <- function(coords, npts,
   
   # Scale back to original size
   grid <- as.data.frame(mapply(function(m,c) m * diff(range(c)) + min(c), 
-                               grid2, coords))
+                               grid, coords))
   
   return(grid)
 }

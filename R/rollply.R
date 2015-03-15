@@ -67,32 +67,37 @@
 #' @importFrom Rcpp sourceCpp
 #' @export
 #' 
+
 rollply <- function(.data,
                     .rollvars,
                     wdw.size,
                     fun,
                     grid=NULL,
                     grid.npts=200,
-                    grid.type='identical', # grid_identical, grid_proportional, ahull_crop, ahull_fill
+                    grid.type='identical', # identical, proportional, ahull_crop, ahull_fill
                     grid.options=NULL,
                     padding='none', # outside/inside/none or value
                     .parallel=FALSE,
                     ...) {  # passed to fun
   
+  # Parse formula before checks
   .rollvars <- formulr::as.formulr(.rollvars)
   
   #<!todo!> add checks that variables are present in data.frame otherwise we 
   # will have wierd results due to lexical scoping.
   check_args(.rollvars, .data, grid, grid.type)
   
+  if ( ! is.data.frame(.data)) .data <- as.data.frame(.data)
+  
+  
   # Handle groups: if we provide groups, then we call rollply within each
   # groups using ddply.
   if (formulr::has.g(.rollvars)) {
     # Build new argument list
     args.grps <- as.list(match.call(), expand.dots=TRUE)
-    # Make .variables used by ddply
+    # Pass the group argument of the formula as the group to ddply and delete
+    # it in the original formula
     args.grps[['.variables']] <- formulr::form.g(.rollvars) # grabbed by ddply
-    # Update rollvars
     formulr::form.g(.rollvars) <- NA
     args.grps[['.rollvars']]  <- .rollvars 
     # Call ddply
@@ -104,28 +109,26 @@ rollply <- function(.data,
   coords <- formulr::eval.formulr(.rollvars, envir=.data, enclos=parent.frame())
   coords <- do.call(cbind, coords[['x']])
   
-  # Check if NAs, and if yes then act
-  NA_lines <- apply(coords, 1, function(X) any(is.na(X)))
-  if (any(NA_lines)) {
-    # We do not remove NAs as this would create a copy of 
-    # a potentially big dataset.
-    stop('NA in moving window parameters are not supported. Try removing them.')
-  }
+  # Check for NAs
+  check_coords(coords, grid)
   
   # Determine sides policy
   if (!is.numeric(padding)) {
     pad <- switch(padding,
                   outside = wdw.size/2,
-                  inside  = -wdw.size/2,
+                  inside  = - wdw.size/2,
                   none    = 0)
   }
   
   # Build output grid
   if (is.null(grid)) {
     grid <- build_grid(grid.type, coords, grid.npts, pad, grid.options)
+  } else if ( ! is.data.frame(grid)) { 
+    grid <- as.data.frame(grid)
   }
   
-  # Do the work brah.
+  
+  # Do the work 
   # Note: we use ddply here as it has a more robust behaviour than adply, 
   # (most notably when the inner function returns a data.frame with multiple
   # lines).

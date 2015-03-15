@@ -3,9 +3,9 @@ Title: Rolling-window add-on for plyr.
 Version: 0.2
 Authors@R: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
 Description: Applies an arbitrary function in a rolling window.
-Depends:
+Depends: 
     R (>= 3.1.1)
-Imports:
+Imports: 
     plyr,
     Rcpp,
     alphahull,
@@ -14,3 +14,4 @@ Imports:
 License: GPL-2
 LazyData: true
 LinkingTo: Rcpp
+Suggests: testthat
