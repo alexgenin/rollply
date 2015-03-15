@@ -1,10 +1,7 @@
 #
 # 
-# 
-# 
 # This file contains functions that deal with package lodaing and unloading.
 # 
-
 
 .onAttach <- function(libname, pkgname) {
   
@@ -23,4 +20,3 @@
   }
   
 }
-

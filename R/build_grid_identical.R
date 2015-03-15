@@ -1,6 +1,7 @@
-#'
-#' @title Create a grid with the same number of points on each dimension.
-#'
+#' 
+#' @title Create a regular grid with the same number of points on each 
+#'        dimension.
+#' 
 #' @param coords A matrix or data.frame of coordinates
 #' @param npts The approximate total number of points of the output grid 
 #' @param pad Padding on each dimension (a positive number makes a grid
@@ -11,13 +12,13 @@
 #'         \code{data.frame} with approximately \code{npts} rows and 
 #'         \code{ncol(coords)} columns.
 #'
-#' @family mesh builders
+#' @family grid builders
 #' 
 #'@export
 # 
 
-build_mesh_grid_identical <- function(coords, npts, pad=0, 
-                                      ...) { # ignored
+build_grid_identical <- function(coords, npts, pad=0, 
+                                 ...) { # ignored
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)
   
@@ -25,10 +26,10 @@ build_mesh_grid_identical <- function(coords, npts, pad=0,
   # so we use the correct, identical amount of points on each dimension.
   length.onedim <- floor(npts^(1/ndims))
   
-  mesh.seed <- sapply(seq.int(ncol(coords)), 
-                      build_mesh_seed_onedim,coords.ranges,length.onedim,pad,
+  grid.seed <- sapply(seq.int(ncol(coords)), 
+                      build_grid_seed_onedim,coords.ranges,length.onedim,pad,
                       simplify=FALSE)
-  names(mesh.seed) <- colnames(coords)
+  names(grid.seed) <- colnames(coords)
   
-  return( expand.grid(mesh.seed, KEEP.OUT.ATTRS = FALSE) )
+  return( expand.grid(grid.seed, KEEP.OUT.ATTRS = FALSE) )
 }

@@ -11,36 +11,36 @@
 #' @return The coordinates of a grid of points as a \code{data.frame} with 
 #'         approximately \code{npts} rows and \code{ncol(coords)} columns.
 #' 
-#' @family mesh building functions
+#' @family grid building functions
 #' 
 #'@export
 
 #' @export
-build_mesh_grid_proportional <- function(coords, npts, pad=0, 
+build_grid_proportional <- function(coords, npts, pad=0, 
                                          ...) {  # ignored
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)
   
   if (ncol(coords)!=2) 
-    stop('This type of mesh is only implemented for 2 dimensions.')
+    stop('This type of grid is only implemented for 2 dimensions.')
   
   npts.dims <- get_npts_dims(coords.ranges, npts, pad)
   
-  # Build mesh seed to feed to expand.grid
-  mesh.seed <- list()
+  # Build grid seed to feed to expand.grid
+  grid.seed <- list()
   for (col in seq.int(ncol(coords))) {
-    mesh.seed[[col]] <- build_mesh_seed_onedim(col, coords.ranges, 
+    grid.seed[[col]] <- build_grid_seed_onedim(col, coords.ranges, 
                                                npts.dims[col], pad)
   }
   
-  names(mesh.seed) <- colnames(coords)
+  names(grid.seed) <- colnames(coords)
   
-  expand.grid(mesh.seed, KEEP.OUT.ATTRS = FALSE)
+  expand.grid(grid.seed, KEEP.OUT.ATTRS = FALSE)
 }
 
 get_npts_dims <- function(coords.ranges, npts, pad) { 
-  # Given npts to put in a L*l rectangle of size ratio r (=L/l), we can show 
-  # that m=sqrt(r*npts) and n=r*sqrt(npts) to have mxn tiles.
+  # Given npts to put in a L*l rectangle of size ratio r (=L/l), then
+  # m=sqrt(r*npts) and n=r*sqrt(npts) to have m x n tiles.
   sides.l <- apply(coords.ranges, 2, diff) + pad
   r <- max(sides.l) / min(sides.l)
   npts.dims <- c(sqrt(npts/r), sqrt(npts*r))[order(sides.l)]

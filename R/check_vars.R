@@ -1,21 +1,22 @@
 # 
 # 
 # 
-# Checks variables in input data.frame and/or mesh.
+# Checks variables in input data.frame and/or grid.
 # 
 
 
 check_args <- function(.rollvars, 
                        .data, 
-                       mesh, 
-                       mesh.type) { 
+                       grid, 
+                       grid.type) { 
   
-  # Check for proper mesh type
-  if (!exists(paste0('build_mesh_',mesh.type))) 
-    stop('Unknown mesh type. See ?build.mesh for a list of supported mesh types')
+  # Check for proper grid type
+  if (!exists(paste0('build_grid_',grid.type))) 
+    stop('Unknown grid type. See ?build.grid for a list of supported grid types')
   
-  # Check if the mesh is a named data.frame
-  if ( !is.null(mesh) && 
-      (is.null(names(mesh)) || !is.data.frame(mesh)) )
-    stop('The supplied mesh must be a named data.frame')
+  # Check if the grid is a named data.frame
+  if ( !is.null(grid) && 
+      (is.null(names(grid)) || !is.data.frame(grid)) )
+    stop('The supplied grid must be a named data.frame')
+    
 }
