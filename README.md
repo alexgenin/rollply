@@ -6,10 +6,10 @@ moving-window based computations easier. Just provide a function that works on
 a data.frame, rollply will take care of building the appropriate subsets and 
 apply that function to each of them. 
 
-Some packages for time series are out there that contain functions computing 
-moving averages (e.g. TTR::SMA), but were not flexible enough for my use and 
-required specific time-series classes. Rollply works on generic data.frames and
-takes advantages on plyr's sugar (parallelism, progress report, etc.).
+Some packages out there contain functions that compute moving-window statistics 
+(e.g. TTR::SMA), but were not flexible enough for my use and required specific 
+time-series classes. Rollply works on generic data.frames and builds upon plyr's
+advantages (parallelism, progress report, etc.).
 
 In short, it allows writing something like this:
 
@@ -82,7 +82,7 @@ Installation
  - Rollply is also available through R-forge, which might be a better options for
 windows users: 
 
- ```{r}
+ ```r
   install.packages("rollply", repos="http://R-Forge.R-project.org")
  ```
 
