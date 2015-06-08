@@ -1,7 +1,7 @@
 ---
-title: "Building meshes with rollply"
+title: "Building grids within rollply"
 author: "Alexandre Génin"
-date: "28/10/2014"
+date: "08/06/2015"
 ---
 
 ```{r, echo=FALSE, fig.width=2*4.924665, fig.height=4}
@@ -13,69 +13,74 @@ load('./meadow_example.dat')
 mdw <- yosemite_meadow[ , c('lon','lat','meanvwc','tcover')]
 
 # We project lon/lat to UTM zone 11 (southern california)
-mdw[ ,c('x','y')] <- project(as.matrix(mdw[ ,c('lon','lat')]), "+proj=utm +zone=11 ellps=WGS84")
+mdw[ ,c('x','y')] <- project(as.matrix(mdw[ ,c('lon','lat')]), 
+                             "+proj=utm +zone=11 +ellps=WGS84")  
 
 ggplot(mdw, aes(x,y)) + 
   geom_point(shape='+') + 
-  ggtitle('Point surveyed in a meadow in North Yosemite') + 
+  ggtitle('Point surveyed in a meadow') + 
   xlab('UTM X') + 
   ylab('UTM Y')
 
 ```
 
-Rollply uses internally a grid of coordinates (a *mesh*). For each points of this
-mesh it selects the observations falling within the window, then applies the function using this subset. The user can either provide a mesh as a data.frame or rollply will take care of building one automatically. 
+Rollply uses internally a grid of coordinates. For each points of this
+grid it selects the observations falling within the window, then applies the function using this subset. The user can either provide a grid as a data.frame or rollply will take care of building one automatically. 
 
-Several helper functions are provided to build nice 2D meshes, they all start with *build_mesh_*.
+Several helper functions are provided to build nice 2D grids, they all start with *build_grid_*.
 
-- *build_mesh_grid_identical*: builds a grid of regularly-spaced points, with the same number of points on each dimension.
+- *build_grid_identical*: builds a grid of regularly-spaced points, with the same number of points on each dimension.
 
-- *build_mesh_grid_proportional* (2D only): build a 2D grid of points, with a number of points on each dimension proportional to the total span of that dimension in the 
+- *build_grid_proportional* (2D only): build a 2D grid of points, with a number of points on each dimension proportional to the total span of that dimension in the 
 observations.
 
-- *build_mesh_ahull_crop* (2D only): builds a 2D grid of points, then discard   all the points that do not fall in the alphahull of the actual data available.
+- *build_grid_ahull_crop* (2D only): builds a 2D grid of points, then discard   all the points that do not fall in the alphahull of the actual data available.
 
-- *build_mesh_ahull_fill* (2D only): same as above, except iterating to build a mesh with a final number of points approximately equal to the one asked for (parameter mesh.res in function)
+- *build_grid_ahull_fill* (2D only): same as above, except iterating to build a grid with a final number of points approximately equal to the one asked for (parameter grid.res in function)
 
 <!-- to link: http://CRAN.R-project.org/package=alphahull -->
 
-In images, let's say we want a mesh of 500 points to compute something on the 
+In images, let's say we want a grid of 500 points to compute something on the 
 meadow presented above.
 
 ```{r} 
-# We request a mesh with approximately this number of points
+# We request a grid with approximately this number of points
 npts <- 500
 base.plot <- ggplot(NULL, aes(x,y)) + 
                geom_point(data=mdw, shape='+') +
                xlab('UTM X') + 
                ylab('UTM Y')
 
-meshes <- list(grid_identical    = build_mesh_grid_identical(mdw[ ,c('x','y')], npts),
-               grid_proportional = build_mesh_grid_proportional(mdw[ ,c('x','y')], npts),
-               ahull_crop        = build_mesh_ahull_crop(mdw[ ,c('x','y')], npts),
-               ahull_fill        = build_mesh_ahull_fill(mdw[ ,c('x','y')], npts))
+grids <- list(grid_identical     = build_grid_identical(mdw[ ,c('x','y')], npts),
+               grid_proportional = build_grid_proportional(mdw[ ,c('x','y')], npts),
+               ahull_crop        = build_grid_ahull_crop(mdw[ ,c('x','y')], npts),
+               ahull_fill        = build_grid_ahull_fill(mdw[ ,c('x','y')], npts))
 ```
 
-- *build_mesh_grid_identical*:
+- *build_grid_identical*:
+
 ```{r, fig.width=2*4.924665, fig.height=4}
-nrow(meshes[['grid_identical']])
-base.plot + geom_point(data=meshes[['grid_identical']])
+nrow(grids[['grid_identical']]) # Total number of points in grid
+base.plot + geom_point(data=grids[['grid_identical']])
 ```
 
-- *build_mesh_grid_proportional*:
+- *build_grid_proportional*:
+
 ```{r, fig.width=2*4.924665, fig.height=4}
-nrow(meshes[['grid_proportional']])
-base.plot + geom_point(data=meshes[['grid_proportional']])
+nrow(grids[['grid_proportional']]) # Total number of points in grid
+base.plot + geom_point(data=grids[['grid_proportional']])
 ```
 
-- *build_mesh_ahull_crop*:
+- *build_grid_ahull_crop*:
+
 ```{r, fig.width=2*4.924665, fig.height=4}
-nrow(meshes[['ahull_crop']])
-base.plot + geom_point(data=meshes[['ahull_crop']])
+nrow(grids[['ahull_crop']]) # Total number of points in grid
+base.plot + geom_point(data=grids[['ahull_crop']])
 ```
 
-- *build_mesh_ahull_fill*: takes much longer to run but gives a number of points that correspond approximately to what was requested
+- *build_grid_ahull_fill*: takes much longer to run but gives a number of points that correspond approximately to what was requested
+
 ```{r, fig.width=2*4.924665, fig.height=4}
-nrow(meshes[['ahull_fill']])
-base.plot + geom_point(data=meshes[['ahull_fill']])
+nrow(grids[['ahull_fill']]) # Total number of points in grid
+base.plot + geom_point(data=grids[['ahull_fill']])
 ```

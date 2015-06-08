@@ -9,16 +9,12 @@ using namespace Rcpp;
 LogicalVector lookup_in_wdw(NumericMatrix current_coords, NumericMatrix coords, double wdw);
 RcppExport SEXP rollply_lookup_in_wdw(SEXP current_coordsSEXP, SEXP coordsSEXP, SEXP wdwSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericMatrix >::type current_coords(current_coordsSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type coords(coordsSEXP );
-        Rcpp::traits::input_parameter< double >::type wdw(wdwSEXP );
-        LogicalVector __result = lookup_in_wdw(current_coords, coords, wdw);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type current_coords(current_coordsSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type coords(coordsSEXP);
+    Rcpp::traits::input_parameter< double >::type wdw(wdwSEXP);
+    __result = Rcpp::wrap(lookup_in_wdw(current_coords, coords, wdw));
+    return __result;
 END_RCPP
 }

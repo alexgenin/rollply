@@ -15,7 +15,7 @@ colnames(badgrid) <- c('x','y')
 
 test_that("Rollply handles missing variables", {
   # Error: bad class for .data
-  expect_error(rollply(density(1), ~ x+y, summarise, temp.mean=mean(temp)))
+  expect_error(rollply(density(1:10), ~ x+y, summarise, temp.mean=mean(temp)))
   # Error: vars not found in .data
   expect_error(rollply(baddata, ~ x+y, summarise, temp.mean=mean(temp)))
   # Error: bad class for grid 

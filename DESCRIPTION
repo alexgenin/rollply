@@ -1,6 +1,6 @@
 Package: rollply
 Title: Rolling-window add-on for plyr.
-Version: 0.2
+Version: 0.3
 Authors@R: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
 Description: Applies an arbitrary function in a rolling window.
 Depends: 
@@ -10,7 +10,7 @@ Imports:
     Rcpp,
     alphahull,
     scales,
-    formulr
+    stringr
 License: GPL-2
 LazyData: true
 LinkingTo: Rcpp

@@ -18,7 +18,7 @@ check_coords <- function(coords, grid) {
   
   # Check for the presence of NA's
   na_in_coords <- apply(coords, 2, function(X) any(is.na(X)))
-  if (!is.null(grid)) {
+  if (! is.null(grid) ) {
     na_in_grid   <- apply(grid, 2, function(X) any(is.na(X)))
   } else { 
     na_in_grid <- FALSE
@@ -27,8 +27,15 @@ check_coords <- function(coords, grid) {
   # We do not remove NAs as this would create a copy of 
   # a potentially big dataset.
   if (na_in_coords || na_in_grid) { 
-    stop('NA in moving window parameters are not supported.',
-         'Try removing them beforehand.')
+    stop(paste0('NA in coordinates are not supported. ',
+                'Try removing them before calling rollply.'))
+  }
+  
+  if (!is.null(grid)) { 
+    if ( ! all(colnames(coords) %in% colnames(grid)) ) { 
+      stop(paste0("Coordinates columns not found in grid, please check ",
+                  "the provided grid."))
+    } 
   }
   
 }
@@ -57,28 +64,11 @@ check_args <- function(.rollvars,
     
     # Need colnames !
     if ( is.null(colnames(grid)) ) { 
-      stop("Grid column names should be defined")
+      stop("Grid object should have column names")
     }
     
   }
-  
-  # Check if the names provided in the formula are present in .data and grid
-  formnames <- unlist(Filter(function(str) { ! any(str == "NA") },
-                             lapply(.rollvars, names))) # this should be moved to formulr
-  names_are_in(colnames(.data), formnames, "not found in provided .data", stop)
-  
-  # Check if formnames are present in grid names too
-  if (!is.null(grid)) { 
-    names_are_in(colnames(grid), formnames, "not found in provided grid", stop)
-  }
-  
-}
-
-# Reports if one name is not found in another bunch of names
-names_are_in <- function(obj.names, vars, error.suffix, error.fun) { 
-  for (var in vars) { 
-    if ( ! var %in% obj.names ) error.fun(paste(var, error.suffix))
-  }
+    
 }
 
 is_mat_or_df <- function(obj) { 

@@ -33,7 +33,7 @@ dat <- ddply(data.frame(person=c('françois','nicolas','jacques')), ~ person,
               y=cumsum(rnorm(1000,0,1)))
 
 # Smoothed trajectory over ten time-steps
-rollav <- rollply(dat, ~ time | person, wdw.size=10, mesh.res=1000,
+rollav <- rollply(dat, ~ time | person, wdw.size=10, grid.npts=1000,
                   summarise, x=mean(x), y=mean(y))
 
 ggplot(dat,aes(x,y,color=person)) + 
@@ -44,8 +44,8 @@ ggplot(dat,aes(x,y,color=person)) +
 
 
 # Where did people spend their time ?
-fixed_mesh <- build_mesh('ahull_crop', dat[ ,c('x','y')], 5000) # we fix the mesh across groups
-rollav <- rollply(dat, ~ x + y | person, wdw.size=2, mesh=fixed_mesh,
+fixed_grid <- build_grid('ahull_crop', dat[ ,c('x','y')], 5000) # we fix the mesh across groups
+rollav <- rollply(dat, ~ x + y | person, wdw.size=2, grid=fixed_grid,
                   summarise, time.spent=length(time))
 
 ggplot(subset(rollav, time.spent>0)) + 

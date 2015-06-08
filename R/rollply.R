@@ -80,54 +80,51 @@ rollply <- function(.data,
                     .parallel=FALSE,
                     ...) {  # passed to fun
   
-  # Parse formula before checks
-  .rollvars <- formulr::as.formulr(.rollvars)
-  
+  vars <- parse_formula(.rollvars, enclos=parent.frame())
+    
   #<!todo!> add checks that variables are present in data.frame otherwise we 
   # will have wierd results due to lexical scoping.
-  check_args(.rollvars, .data, grid, grid.type)
-  
-  if ( ! is.data.frame(.data)) .data <- as.data.frame(.data)
+  check_args(vars, .data, grid, grid.type)
   
   
   # Handle groups: if we provide groups, then we call rollply within each
   # groups using ddply.
-  if (formulr::has.g(.rollvars)) {
+  if ( ! is.na(vars[["groups"]]) ) {
     # Build new argument list
     args.grps <- as.list(match.call(), expand.dots=TRUE)
     # Pass the group argument of the formula as the group to ddply and delete
     # it in the original formula
-    args.grps[['.variables']] <- formulr::form.g(.rollvars) # grabbed by ddply
-    formulr::form.g(.rollvars) <- NA
-    args.grps[['.rollvars']]  <- .rollvars 
+    args.grps[['.variables']] <- vars[["groups"]] # .variable is ddply's arg
+    vars[["groups"]] <- NA
+    args.grps[['.rollvars']]  <- vars
     # Call ddply
     return( do.call(plyr::ddply, args.grps, envir=parent.frame()) )
   }
   
   # We extract variables used for computing and build a matrix
   # <!todo!> Add check that variables used for rolling windows are numeric!
-  coords <- formulr::eval.formulr(.rollvars, envir=.data, enclos=parent.frame())
-  coords <- do.call(cbind, coords[['x']])
+  coords <- plyr::eval.quoted(vars[["coords"]], 
+                              envir=as.data.frame(.data))
+  coords <- do.call(cbind, coords)
   
-  # Check for NAs
+  # Check for NAs, zero area, etc
   check_coords(coords, grid)
   
   # Determine sides policy
   if (!is.numeric(padding)) {
-    pad <- switch(padding,
-                  outside = wdw.size/2,
-                  inside  = - wdw.size/2,
+    padding <- switch(padding,
+                  outside = wdw.size / 2,
+                  inside  = - wdw.size / 2,
                   none    = 0)
   }
   
   # Build output grid
   if (is.null(grid)) {
-    grid <- build_grid(grid.type, coords, grid.npts, pad, grid.options)
+    grid <- build_grid(grid.type, coords, grid.npts, padding, grid.options)
   } else if ( ! is.data.frame(grid)) { 
     grid <- as.data.frame(grid)
   }
-  
-  
+    
   # Do the work 
   # Note: we use ddply here as it has a more robust behaviour than adply, 
   # (most notably when the inner function returns a data.frame with multiple
