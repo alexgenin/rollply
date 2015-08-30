@@ -17,8 +17,7 @@
 #'@export
 # 
 
-build_grid_identical <- function(coords, npts, pad=0, 
-                                 ...) { # ignored
+build_grid_identical <- function(coords, npts, pad = 0, ...) {
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)
   
@@ -28,7 +27,7 @@ build_grid_identical <- function(coords, npts, pad=0,
   
   grid.seed <- sapply(seq.int(ncol(coords)), 
                       build_grid_seed_onedim,coords.ranges,length.onedim,pad,
-                      simplify=FALSE)
+                      simplify = FALSE)
   names(grid.seed) <- colnames(coords)
   
   return( expand.grid(grid.seed, KEEP.OUT.ATTRS = FALSE) )

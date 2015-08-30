@@ -4,55 +4,54 @@
 \alias{rollply}
 \title{Rollply}
 \usage{
-rollply(.data, .rollvars, wdw.size, fun, grid = NULL, grid.npts = 200,
-  grid.type = "identical", grid.options = NULL, padding = "none",
+rollply(.data, .rollvars, wdw.size, fun, grid = NULL, grid_npts = NULL,
+  grid_type = "identical", grid_opts = NULL, padding = "none",
   .parallel = FALSE, ...)
 }
 \arguments{
-\item{.data}{data.frame to be processed}
+\item{.data}{\code{data.frame} to be processed}
 
 \item{.rollvars}{variables describing the moving window: a formula of the
-form ~ a + b | c, where a and b denote the variables used
-for the rolling window and c an optional grouping variable}
+form \code{~ a + b | c}, where \code{a} and \code{b} denote
+the variables used for the rolling window and \code{c} an
+optional grouping variable}
 
 \item{wdw.size}{window size}
 
-\item{fun}{function to apply to each subset}
+\item{fun}{function to apply}
 
 \item{grid}{data.frame of points at which the computation is done. If
-\code{NULL} then a grid is generated using \code{grid.npts}
-and \code{grid.type}.}
+\code{NULL} then a grid is generated using \code{grid_npts}
+and \code{grid_type}.}
 
-\item{grid.npts}{if grid is unspecified, then the number of points for the
+\item{grid_npts}{if grid is unspecified, then the number of points for the
 resolution of the grid to build. Otherwise ignored.}
 
-\item{grid.type}{The type of grid to generate}
+\item{grid_type}{The type of grid to generate}
 
-\item{grid.options}{Options to be passed to the grid-generating function}
+\item{grid_opts}{Options to be passed to the grid-generating function}
 
-\item{padding}{padding policy outside of data range, one of 'none',
+\item{padding}{padding policy one the edgse of the dataset, one of 'none',
 'outside', 'inside', or a numeric value}
 
-\item{.parallel}{whether to use parallel processing (see \link{ddply} for
-more information on parallelism).}
+\item{.parallel}{whether to use parallel processing (see \code{\link{ddply}}
+for more information on parallelism).}
 
-\item{...}{other arguments passed to ddply and fun}
+\item{...}{other arguments passed to \code{\link{ddply}} and \code{fun}}
 }
 \value{
 A named data.frame with the function results at each grid point.
 }
 \description{
-For each subset of a data.frame falling in a moving window, computes the
-results of a function on this subset, then combine results in a data.frame.
+Applies a function on data falling in a moving window, then
 }
 \details{
-Rollply allows applying a function on subsets falling in a window moving over
-one or more variables. It is built internally over ddply and follows a very
+Rollply applies a function one or more variables. It is built internally over ddply and follows a very
 similar syntax.
 }
 \examples{
 library(plyr)
-# Generate 1D random walk
+# 1D example
 dat <- data.frame(time=seq.int(1000),
                   position=cumsum(rnorm(1000,0,10)))
 
@@ -62,7 +61,32 @@ rollav <- rollply(dat, ~ time, wdw.size=10,
 plot(position ~ time, data=dat)
 lines(rollav, col='red')
 
+# 2D example
 
-# see http://github.com/alexgenin/rollply for more examples
+# Generate three 2D random walks
+dat <- ddply(data.frame(person=c('françois','nicolas','jacques')), ~ person,
+            summarise,
+             time=seq.int(1000),
+             x=cumsum(rnorm(1000,0,1)),
+             y=cumsum(rnorm(1000,0,1)))
+
+# Smoothed trajectory over ten time-steps
+rollav <- rollply(dat, ~ time | person, wdw.size=10, grid_res=1000,
+                 summarise, x=mean(x), y=mean(y))
+
+ggplot(dat,aes(x,y,color=person)) +
+ geom_point(alpha=.5, shape='+') +
+ geom_path(data=rollav)
+
+fixed_grid <- build_grid(dat[ ,c('x','y')], 5000) # we fix the grid across groups
+rollav <- rollply(dat, ~ x + y | person, wdw.size=2, grid=fixed_grid,
+                  summarise, time.spent=length(time))
+
+ggplot(subset(rollav, time.spent>0)) +
+  geom_point(aes(x,y, color=person, size=time.spent)) +
+  facet_grid(~person)
+
+
+# see also vignette(for more examples
 }
 

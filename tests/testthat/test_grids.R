@@ -7,7 +7,7 @@ exampleset <- data.frame(x = seq.int(0,1,l=100),
                          y = seq.int(0,5,l=100) + rnorm(100))
 
 grid_builders <- list(build_grid_identical, 
-                      build_grid_proportional, 
+                      build_grid_squaretile, 
                       build_grid_ahull_crop,
                       build_grid_ahull_fill)
 

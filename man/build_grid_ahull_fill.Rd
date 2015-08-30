@@ -4,22 +4,21 @@
 \alias{build_grid_ahull_fill}
 \title{Create a grid within the alpha hull of a set of points.}
 \usage{
-build_grid_ahull_fill(coords, npts, grid.opts = list(alpha = 0.3, error.tol =
-  0.05, run.max = 20), verbose = FALSE, ...)
+build_grid_ahull_fill(coords, npts, pad = NULL, grid_opts = list(alpha =
+  0.3, error_tol = 0.05, run_max = 20, verbose = FALSE))
 }
 \arguments{
 \item{coords}{A matrix or data.frame of coordinates with two columns}
 
 \item{npts}{The approximate number of points of the requested grid}
 
-\item{grid.opts}{A list with component \code{alpha} that controls the
-shape of the alpha hull, \code{error.tol} the error
-tolerance (in percentage) on the number of points and
-\code{run.max} the maximum number of iterations.}
+\item{pad}{ignored.}
 
-\item{verbose}{Show plots of the grid being built}
-
-\item{...}{other arguments are silently ignored}
+\item{grid_opts}{A list with component \code{alpha} that controls the
+                    shape of the alpha hull, \code{error_tol} the error
+                    tolerance as a fraction of the number of points,
+                    \code{run_max} the maximum number of iterations and
+                    \code{verbose} to get some debug output.}
 }
 \value{
 The coordinates of a grid of points as a \code{data.frame} with
@@ -30,6 +29,6 @@ The coordinates of a grid of points as a \code{data.frame} with
 }
 \seealso{
 Other grid building functions: \code{\link{build_grid_ahull_crop}};
-  \code{\link{build_grid_proportional}}
+  \code{\link{build_grid_squaretile}}
 }
 

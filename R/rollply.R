@@ -1,47 +1,44 @@
 # 
+# rollply: split-apply-combine strategy for moving-window computations.
+# Originally written by Alexandre Génin, 2014
 # 
-# rollply: applies a function on a data frame over a sliding window. Slow but
-#   generic.
-# Originally written by Alexandre Genin, 2014, still uncomplete
-# 
-# Note: sometimes parallel computing fails saying that "..." is used in an 
+# Note: sometimes parallel computing warns that "..." is used in an 
 #   incorrect context. This is probably related to [1] and is unfixed at the 
 #   moment.
 # 
 # [1] https://github.com/hadley/plyr/issues/203
 # 
-
-
-
+# 
+# 
+# 
 #' @title Rollply
 #' 
-#' @description
-#' For each subset of a data.frame falling in a moving window, computes the 
-#' results of a function on this subset, then combine results in a data.frame.
+#' @description Applies a function on data falling in a moving window, then 
+#{              combine results in a data.frame.
 #' 
-#' @param .data data.frame to be processed
+#' @param .data \code{data.frame} to be processed
 #' @param .rollvars variables describing the moving window: a formula of the 
-#'                  form ~ a + b | c, where a and b denote the variables used 
-#'                  for the rolling window and c an optional grouping variable
-#' @param fun function to apply to each subset
+#'                  form \code{~ a + b | c}, where \code{a} and \code{b} denote 
+#'                  the variables used for the rolling window and \code{c} an 
+#'                  optional grouping variable
+#' @param fun function to apply
 #' @param wdw.size window size
 #' @param grid data.frame of points at which the computation is done. If 
-#'             \code{NULL} then a grid is generated using \code{grid.npts}
-#'             and \code{grid.type}.
-#' @param grid.npts if grid is unspecified, then the number of points for the 
+#'             \code{NULL} then a grid is generated using \code{grid_npts}
+#'             and \code{grid_type}.
+#' @param grid_npts if grid is unspecified, then the number of points for the 
 #'                  resolution of the grid to build. Otherwise ignored.
-#' @param grid.type The type of grid to generate
-#' @param grid.options Options to be passed to the grid-generating function
-#' @param padding padding policy outside of data range, one of 'none', 
+#' @param grid_type The type of grid to generate
+#' @param grid_opts Options to be passed to the grid-generating function
+#' @param padding padding policy one the edgse of the dataset, one of 'none', 
 #'                'outside', 'inside', or a numeric value 
-#' @param .parallel whether to use parallel processing (see \link{ddply} for 
-#'                  more information on parallelism). 
-#' @param ... other arguments passed to ddply and fun
+#' @param .parallel whether to use parallel processing (see \code{\link{ddply}} 
+#'                  for more information on parallelism). 
+#' @param ... other arguments passed to \code{\link{ddply}} and \code{fun}
 #' 
 #' @details
 #' 
-#' Rollply allows applying a function on subsets falling in a window moving over
-#' one or more variables. It is built internally over ddply and follows a very 
+#' Rollply applies a function one or more variables. It is built internally over ddply and follows a very 
 #' similar syntax. 
 #' 
 #' @return 
@@ -50,7 +47,7 @@
 #' @examples
 #' 
 #' library(plyr)
-#' # Generate 1D random walk
+#' # 1D example
 #' dat <- data.frame(time=seq.int(1000),
 #'                   position=cumsum(rnorm(1000,0,10)))
 #' 
@@ -60,8 +57,34 @@
 #' plot(position ~ time, data=dat)
 #' lines(rollav, col='red')
 #' 
+#' # 2D example
 #' 
-#' # see http://github.com/alexgenin/rollply for more examples
+#'# Generate three 2D random walks
+#'dat <- ddply(data.frame(person=c('françois','nicolas','jacques')), ~ person, 
+#'             summarise, 
+#'              time=seq.int(1000),
+#'              x=cumsum(rnorm(1000,0,1)),
+#'              y=cumsum(rnorm(1000,0,1)))
+#'
+#'# Smoothed trajectory over ten time-steps
+#'rollav <- rollply(dat, ~ time | person, wdw.size=10, grid_res=1000,
+#'                  summarise, x=mean(x), y=mean(y))
+#'
+#'ggplot(dat,aes(x,y,color=person)) + 
+#'  geom_point(alpha=.5, shape='+') + 
+#'  geom_path(data=rollav) 
+#' 
+# # Where did people spend their time ?
+#' fixed_grid <- build_grid(dat[ ,c('x','y')], 5000) # we fix the grid across groups
+#' rollav <- rollply(dat, ~ x + y | person, wdw.size=2, grid=fixed_grid,
+#'                   summarise, time.spent=length(time))
+#' 
+#' ggplot(subset(rollav, time.spent>0)) + 
+#'   geom_point(aes(x,y, color=person, size=time.spent)) + 
+#'   facet_grid(~person)
+#' 
+#' 
+#' # see also vignette(for more examples
 #' 
 #' @useDynLib rollply
 #' @importFrom Rcpp sourceCpp
@@ -72,20 +95,17 @@ rollply <- function(.data,
                     .rollvars,
                     wdw.size,
                     fun,
-                    grid=NULL,
-                    grid.npts=200,
-                    grid.type='identical', # identical, proportional, ahull_crop, ahull_fill
-                    grid.options=NULL,
-                    padding='none', # outside/inside/none or value
-                    .parallel=FALSE,
-                    ...) {  # passed to fun
+                    grid = NULL,
+                    grid_npts = NULL,
+                    grid_type = 'identical', # identical, proportional, ahull_crop, ahull_fill
+                    grid_opts = NULL,
+                    padding   = 'none', # outside/inside/none or value
+                    .parallel = FALSE,
+                    ...) {  # passed to ddply/fun
   
   vars <- parse_formula(.rollvars, enclos=parent.frame())
     
-  #<!todo!> add checks that variables are present in data.frame otherwise we 
-  # will have wierd results due to lexical scoping.
-  check_args(vars, .data, grid, grid.type)
-  
+  check_args(vars, .data, grid, grid_type, wdw.size)
   
   # Handle groups: if we provide groups, then we call rollply within each
   # groups using ddply.
@@ -107,20 +127,26 @@ rollply <- function(.data,
                               envir=as.data.frame(.data))
   coords <- do.call(cbind, coords)
   
+  # Set the number of points for the grid 
+  if ( is.null(grid_npts) ) { 
+    coords_span <- apply(coords, 2, function(x) diff(range(x))) 
+    grid_npts <- floor(max(coords_span / wdw.size ^ ncol(coords)) )
+  }
+  
   # Check for NAs, zero area, etc
   check_coords(coords, grid)
   
   # Determine sides policy
   if (!is.numeric(padding)) {
     padding <- switch(padding,
-                  outside = wdw.size / 2,
-                  inside  = - wdw.size / 2,
-                  none    = 0)
+                      outside = wdw.size / 2,
+                      inside  = - wdw.size / 2,
+                      none    = 0)
   }
   
   # Build output grid
   if (is.null(grid)) {
-    grid <- build_grid(grid.type, coords, grid.npts, padding, grid.options)
+    grid <- build_grid(grid_type, coords, grid_npts, padding, grid_opts)
   } else if ( ! is.data.frame(grid)) { 
     grid <- as.data.frame(grid)
   }

@@ -18,8 +18,8 @@ parse_formula <- function(form, enclos) {
   
   # Discard stuff before ~ 
   # left_side  <- str_extract(text,perl("^.*(?=~)"))
-  right_side <- stringr::str_extract(text, stringr::perl("(?<=~).*(?=\\|)"))
-  groups     <- stringr::str_extract(text, stringr::perl("(?<=\\|).*$"))
+  right_side <- stringr::str_extract(text, stringr::regex("(?<=~).*(?=\\|)"))
+  groups     <- stringr::str_extract(text, stringr::regex("(?<=\\|).*$"))
   
   
   # Process text extracted from formula

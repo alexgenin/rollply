@@ -4,18 +4,18 @@
 \alias{build_grid_ahull_crop}
 \title{Create a grid within the alpha hull of a set of points.}
 \usage{
-build_grid_ahull_crop(coords, npts, grid.opts = list(alpha = 0.3),
-  verbose = FALSE, ...)
+build_grid_ahull_crop(coords, npts, pad = NULL, grid_opts = list(alpha =
+  0.3))
 }
 \arguments{
 \item{coords}{A matrix or data.frame of coordinates with two columns}
 
 \item{npts}{The number of points before cropping to the alpha hull shape}
 
-\item{grid.opts}{A list with component \code{alpha} that controls the
-shape of the alpha hull}
+\item{pad}{Ignored}
 
-\item{verbose}{Show debug plots}
+\item{grid_opts}{A list with component \code{alpha} that controls the
+shape of the alpha hull}
 
 \item{...}{other arguments are silently ignored}
 }
@@ -28,6 +28,6 @@ The coordinates of a grid of points as a \code{data.frame} with
 }
 \seealso{
 Other grid building functions: \code{\link{build_grid_ahull_fill}};
-  \code{\link{build_grid_proportional}}
+  \code{\link{build_grid_squaretile}}
 }
 

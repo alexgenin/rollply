@@ -3,12 +3,12 @@
 #' 
 #' @param coords A matrix or data.frame of coordinates with two columns
 #' @param npts The approximate number of points of the requested grid
-#' @param grid.opts A list with component \code{alpha} that controls the 
-#'                     shape of the alpha hull, \code{error.tol} the error
-#'                     tolerance (in percentage) on the number of points and 
-#'                     \code{run.max} the maximum number of iterations.
-#' @param verbose Show plots of the grid being built
-#' @param ... other arguments are silently ignored
+#' @param pad ignored.
+#' @param grid_opts A list with component \code{alpha} that controls the 
+#'                     shape of the alpha hull, \code{error_tol} the error
+#'                     tolerance as a fraction of the number of points, 
+#'                     \code{run_max} the maximum number of iterations and 
+#'                     \code{verbose} to get some debug output.
 #' 
 #' @return The coordinates of a grid of points as a \code{data.frame} with 
 #'         approximately \code{npts} rows and \code{ncol(coords)} columns.
@@ -16,71 +16,71 @@
 #' @family grid building functions
 #' 
 #' @export
-
-# Requires splancs
-
 build_grid_ahull_fill <- function(coords, npts, 
-                                  grid.opts=list(alpha=.3, error.tol=.05, run.max=20),
-                                  verbose=FALSE,
-                                  ...) {
+                                  pad = NULL, # pad is ignored for this function
+                                  grid_opts = list(alpha = .3, 
+                                                   error_tol = .05, 
+                                                   run_max = 20, 
+                                                   verbose = FALSE)) {
   
-  coords <- coords[!duplicated(coords), ]
+  # Remove duplicates otherwise ahull throws an error
+  coords <- coords[! duplicated(coords), ]
   
-  if (ncol(coords)!=2) 
+  if (ncol(coords)!=2) {
     stop('This type of grid is only implemented for 2 dimensions.')
+  }
   
   # Take parameters into account
-  opts <- list(alpha=.3, error.tol=.05, run.max=20)
-  opts[names(grid.opts)] <- grid.opts # alter defaults
+  opts <- list(alpha = .3, error_tol = .05, run_max = 20, verbose = FALSE)
+  opts[names(grid_opts)] <- grid_opts # alter defaults
+  verbose <- opts[['verbose']]
   
   # We build an alpha hull of our x/y points.
   # NB: We rescale everything between 0 and 1 so the given alpha is easy to 
   #     interpret and inahull() works (it has trouble with far-from zero values
   #     it seems).
   # <!todo!> this introduces a bug in grid_proportional and gives it the 
-  # same behavior than grid_proportional
-  coords.scaled <- apply(coords, 2, scales::rescale, to=c(0,1))
-  coords.hull   <- alphahull::ahull(coords.scaled, alpha=opts[['alpha']])
+  # same behavior than grid_identical
+  coords.scaled <- apply(coords, 2, scales::rescale, to = c(0,1))
+  coords.hull   <- alphahull::ahull(coords.scaled, alpha = opts[['alpha']])
+  
+  if (verbose) cat('Building grid in alphahull...\n')
   
   # Iterate to find the best proportional fitting 
-  error <- -1; # init
-  npts_iter <- npts
+  error <- -1
   run <- 1
-  while (error < -opts[['error.tol']] && run <= opts[['run.max']]) {
-    grid <- get_grid(npts_iter, coords.scaled, coords.hull)
-    error <- (nrow(grid) - npts) / npts
+  npts_target <- npts
+  while ( error < - opts[['error_tol']] && run <= opts[['run_max']] ) {
     
-    if (verbose & error < 0) { 
-      verbose.plot(coords.hull, grid, error, run)
+    # Compute a grid with the given number of points
+    rect_grid <- build_grid_squaretile(coords.scaled, npts)
+    
+    # Strip points and see how many fall in alphahull
+    to_keep <- apply(rect_grid, 1, 
+                     function(X) alphahull::inahull(coords.hull, X))
+    error <- (sum(to_keep) - npts_target) / npts_target
+    
+    if (verbose) { 
+      cat(paste0('run ', run,', error=', round(error, digits = 2), 
+                '% (', sum(to_keep), ' points)\n'));
     }
     
-    run <- run+1
-    npts_iter <- round(npts_iter - error*npts)
+    # Increase number of points
+    run <- run + 1
+    npts <- round(npts - error * npts)
   }
   
   # Scale back to original size
-  grid <- as.data.frame(mapply(function(m,c) m * diff(range(c)) + min(c), 
-                               grid, coords))
+  grid <- rect_grid[to_keep, ]
+  grid <- data.frame(x = grid[ ,1]*diff(range(coords[ ,1])) + min(coords[ ,1]),
+                     y = grid[ ,2]*diff(range(coords[ ,2])) + min(coords[ ,2]))
   
   return(grid)
 }
 
-get_grid <- function(npts, coords, hull) {
-  
-  # Compute a grid with the given number of points
-  grid.test <- build_grid_proportional(coords, npts)
-  
-  # Strip points and see how many are left
-  to_keep <- apply(grid.test, 1, function(X) { alphahull::inahull(hull, X) })
-  
-  # Return the grid
-  return( grid.test[to_keep, ] )
-}
+# Debug snippet: makes an output with a plot
+#   plot(hull)
+#   points(grid, col='red', pch=3)
+#   title(paste0('run ', run, ' (error: ', 
+#                paste0(round( error * 100 )), '%)', sep=''))
 
-# Makes an output with a plot
-verbose.plot <- function(hull, grid, error, run) {
-  plot(hull)
-  points(grid, col='red', pch=3)
-  title(paste0('run ', run, ' (error: ', 
-               paste0(round(error*100)), '%)', sep=''))
-}

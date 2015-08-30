@@ -43,10 +43,11 @@ check_coords <- function(coords, grid) {
 check_args <- function(.rollvars, 
                        .data, 
                        grid, 
-                       grid.type) { 
+                       grid.type, 
+                       wdw.size) { 
   
   # Checks for proper grid type
-  if ( ! exists(paste0('build_grid_',grid.type)) ) {
+  if ( ! exists(paste0('build_grid_', grid.type)) ) {
     stop('Unknown grid type. See ?build_grid for a list of supported grid types')
   }
   
@@ -68,7 +69,11 @@ check_args <- function(.rollvars,
     }
     
   }
-    
+  
+  if ( ! is.numeric(wdw.size) || length(wdw.size) > 1 ) { 
+    stop('Invalid or missing window size (argument wdw.size), ', 
+         'please check arguments')
+  }
 }
 
 is_mat_or_df <- function(obj) { 

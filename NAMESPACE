@@ -3,7 +3,7 @@
 export(build_grid_ahull_crop)
 export(build_grid_ahull_fill)
 export(build_grid_identical)
-export(build_grid_proportional)
+export(build_grid_squaretile)
 export(rollply)
 importFrom(Rcpp,sourceCpp)
 useDynLib(rollply)
