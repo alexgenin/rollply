@@ -29,7 +29,7 @@ ggplot(NULL,aes(time,position)) +
   geom_line(color='red', data=rollav)
 ```
 
-![rollply_example: random walk](/examples/random_walk.png?raw=true "Average of a 1D random walk")
+![rollply_example: random walk](/misc/random_walk.png?raw=true "Average of a 1D random walk")
 
 Rollply supports groups and 2D moving windows too: 
 
@@ -42,7 +42,7 @@ dat <- ddply(data.frame(person=c('françois','nicolas','jacques')), ~ person,
               y=cumsum(rnorm(1000,0,1)))
 
 # Smoothed trajectory over ten time-steps
-rollav <- rollply(dat, ~ time | person, wdw.size=10, mesh.res=1000,
+rollav <- rollply(dat, ~ time | person, wdw.size=10, grid_npts=1000,
                   summarise, x=mean(x), y=mean(y))
 
 ggplot(dat,aes(x,y,color=person)) + 
@@ -50,12 +50,13 @@ ggplot(dat,aes(x,y,color=person)) +
   geom_path(data=rollav) 
 ```
 
-![rollply_example: random walk with groups](/examples/random_walk_groups.png?raw=true "Average of 2D random walks")
+![rollply_example: random walk with groups](/misc/random_walk_groups.png?raw=true "Average of 2D random walks")
 
 ```r
 # Where did people spend their time ?
-fixed_mesh <- build_mesh(dat[ ,c('x','y')], 5000) # we fix the mesh across groups
-rollav <- rollply(dat, ~ x + y | person, wdw.size=2, mesh=fixed_mesh,
+# we fix the grid across groups
+fixed_grid <- build_grid_squaretile(dat[ ,c('x','y')], 5000) 
+rollav <- rollply(dat, ~ x + y | person, wdw.size=2, grid=fixed_grid,
                   summarise, time.spent=length(time))
 
 ggplot(subset(rollav, time.spent>0)) + 
@@ -63,7 +64,7 @@ ggplot(subset(rollav, time.spent>0)) +
   facet_grid(~person)
 ```
 
-![rollply_example: random walk with 2D window](/examples/random_walk_time_spent.png?raw=true "Time spent in each window")
+![rollply_example: random walk with 2D window](/misc/random_walk_time_spent.png?raw=true "Time spent in each window")
 
 
 Installation 
@@ -72,9 +73,10 @@ Installation
  - From github (recommended): 
  
  ```r
-  install.packages('devtools')
-  library(devtools)
-  install_github('alexgenin/formulr')
+  if ( !require(devtools) ) {
+    install.packages('devtools')
+    library(devtools)
+  }
   install_github('alexgenin/rollply')
   library(rollply)
  ```
@@ -93,6 +95,5 @@ todo
 ----
  - finish documenting !
  - Allow other outputs (currently we only allow a data.frame output)
- - The implementation of the mesh resolution requires more polishing
  - Maybe implement the subset selection in C++ for 1D moving windows
  - ?
