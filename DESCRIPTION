@@ -1,8 +1,9 @@
 Package: rollply
-Title: Rolling-window add-on for plyr
-Version: 0.3
+Title: Moving-window add-on for plyr
+Version: 0.4
 Authors@R: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
-Description: Applies an arbitrary function in a rolling window.
+Description: Applies a a function in a moving window, over a dataset, then 
+             combine the results.
 Depends: 
     R (>= 3.1.1)
 Imports: 
