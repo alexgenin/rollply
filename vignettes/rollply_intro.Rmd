@@ -1,0 +1,301 @@
+---
+title: "A visual introduction to rollply"
+author: "Alexandre Génin <alex@lecairn.org>"
+theme: "anotherdark"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+  html_document:
+    toc: true
+    highlight: "pygments"
+    css: "rollply_intro.css"
+vignette: >
+  %\VignetteIndexEntry{rollply_intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+```
+
+```{r}
+stopifnot(require(proj4) & require(ggplot2) & require(rgdal) & 
+          require(tidyr) & require(rollply))
+```
+
+Rollply is a small function built upon plyr's `ddply` function to facilitate 
+moving-window-based computations. If you have a `data.frame`, give the 
+dimensions over which the function the window should move, and rollply will make 
+the subsets, apply the function on them and then combine the results.
+
+In short, rollply extends the 
+[split-apply-combine strategy](http://plyr.had.co.nz/) to moving-window 
+computations, using a similar syntax. Let's start with a simple example. 
+
+# Examples
+
+## A time-series example
+
+A simple use of moving-windows is adding a trendline to a time series plot. 
+We will use the CO2 data from the Mauna Loa [NOAA 
+Observatory](http://www.esrl.noaa.gov/gmd/ccgg/trends/) as a 
+environmentally-conscious example.
+
+```{r, fig.width=7, fig.height=4}
+# Download and format data
+url <- "ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt"
+hawaii <- read.table(url)[ ,c(3,4)]
+names(hawaii) <- c('date','CO2')
+hawaii[hawaii$CO2 < 0, "CO2"] <- NA # mark NAs as such
+
+# Display original trend
+CO2.plot <- ggplot(hawaii) + geom_line(aes(date, CO2)) + ylab("CO2 (ppm)")
+print(CO2.plot)
+```
+
+There is a clear trend here! Let's smooth out the season effect (the wiggles 
+in the black curve). We'll use a window with a size of one year to compute a 
+yearly average.
+
+```{r, fig.width=7, fig.height=4}
+# with smoothed trend 
+hawaii.smoothed <- rollply(hawaii, ~ date, wdw.size = 1, 
+                           summarise, CO2.mean = mean(CO2, na.rm = TRUE), )
+CO2.plot + geom_line(aes(date, CO2.mean), data = hawaii.smoothed, color = 'red')
+```
+
+And voilà! A rather nice, although a bit depressing, trend line for our data. 
+
+Now, this example is a bit silly: if you are working on regularly-spaced time 
+series, you might be better off using one of the specialized packages 
+(e.g. TTR). However, for a quick-and-dirty approach here Rollply is perfect as 
+it only uses standard `data.frame`s.
+
+Let's take a more complex example.
+
+## Exploring french town names
+
+If you open a map of France, you'll notice that towns and villages 
+tend to have names that follow patterns. For instance, Brittany's towns are 
+famous for having names starting with a *"ker-"*. Many towns in 
+[Lorraine](https://en.wikipedia.org/wiki/Lorraine_%28region%29) end in *"-ange"* 
+(a legacy from the german ending *"-ingen"*). 
+
+Can we visually explore the distribution of town names ? 
+
+A moving-window approach essentially boils down to the following steps: 
+
+1. Build a grid over the whole country
+2. For each point of the grid, take all the towns that are less than xx 
+kilometers from it.
+3. Check the names of the towns and count the ones matching a pattern. Return
+the number of matching towns.
+4. Combine the results in a `data.frame`
+
+Like `ddply` (in package `plyr`), `rollply` takes care of points 1,2 and 4. We 
+just need to define a function that does number 3! 
+
+Let's download a [dataset](http://www.nosdonnees.fr/dataset/listes-des-communes-par-r-gions-d-partements-circonscriptions) of town names with their geographical coordinates:
+
+```{r, warning=FALSE, results="hide"}
+# Download and prepare dataset
+tmpfile <- tempfile()
+url <- paste0('http://www.nosdonnees.fr/wiki/images/b/b5/',
+         'EUCircos_Regions_departements_circonscriptions_communes_gps.csv.gz')
+download.file(url, destfile = tmpfile)
+dat <- read.csv2(tmpfile, stringsAsFactors = FALSE)
+file.remove(tmpfile)
+dat <- dat[ ,c('nom_commune', 'latitude', 'longitude')]
+colnames(dat) <- c('name', 'latitude', 'longitude')
+
+dat[ ,'name']      <- as.factor(tolower(dat[ ,'name']))
+dat[ ,'latitude']  <- as.numeric(dat[ ,'latitude'])
+dat[ ,'longitude'] <- as.numeric(dat[ ,'longitude'])
+
+# We use an equirectangular projection to work on true distances
+dat <- data.frame(dat, proj4::project(dat[ ,c('longitude','latitude')], 
+                                      '+proj=eqc'))
+dat <- na.omit(dat)
+dat <- dat[ ,c('name','x','y')]
+```
+
+```{r, fig.width=7, fig.height=6}
+# Visualise distribution of towns
+str(dat)
+ggplot(dat) + geom_point(aes(x, y), alpha=.1)
+```
+
+Nice, let's see whether *"ker"*-named towns are predominantly in Brittany. 
+
+```{r, fig.width=7, fig.height=6}
+# This is our custom function.
+how_many_with_name <- function(regxp, X) { sum(grepl(regxp, X)) }
+
+dat_roll <- rollply(dat, ~ x + y, wdw.size = 1e4, grid_npts = 10e3,
+                    summarise, ker = how_many_with_name("^ker", name))
+
+ggplot(dat_roll) + 
+  geom_raster(aes(x, y, fill = ker)) + 
+  scale_fill_distiller(palette = 'Greys')
+```
+
+It seems there are indeed many towns with a name starting with "ker" in 
+Brittany (and a couple in Alsace/Lorraine, too). However, our plot is pretty 
+ugly: we can't see the actual country shape! When nothing is specified,
+rollply computes its values over a rectangular grid than spans the maximum width
+and height of the original dataset. 
+
+Here our spatial dataset of towns reflect pretty well the overall shape of the 
+country, so instead of a rectangular grid we can build a grid inside the overall
+outline (the alpha-hull) of the dataset.
+
+```{r}
+dat_roll <- rollply(dat, ~ x + y, wdw.size = 1e4, 
+                    grid_npts = 10e3, 
+                    grid_type = "ahull_fill", 
+                    grid_opts = list(alpha = .02, # shape parameter for hull
+                                     verbose = TRUE), 
+                    summarise, ker = how_many_with_name("^ker", name))
+```
+
+Note that building an alpha hull-based grid is very slow (and not bug-free), as 
+it is built on the pure-R `alphahull` package. However, one can pregenerate 
+grids using the `build_grid_*` functions family and supply them directly to 
+rollply using the `grid` argument, so this computation can be only done once 
+(see below).
+
+So, are there really more town named *ker-*something in Brittany than elsewhere? 
+I'll let you judge (spoiler: yes!):
+
+```{r, fig.width=7, fig.height=6}
+ggplot(dat_roll) + 
+  geom_raster(aes(x, y, fill = ker)) + 
+  scale_fill_distiller(palette = 'Greys')
+```
+
+# Building grids: helper functions
+
+As seen in the french towns example, rollply uses internally a grid of 
+coordinates. For each points of this grid it selects the observations within the 
+window, then applies the function on this subset. The user can either provide a 
+grid as a `data.frame` or rollply will take care of building one automatically. 
+
+Several helper functions are provided to build nice grids, they all start 
+with *build_grid_*.
+
+- *build_grid_identical* builds a grid with as many points on each dimension
+
+- *build_grid_squaretile* (2D only) builds a 2D grid of points, with a number 
+of points on each dimension that depends on the length of that dimension
+
+- *build_grid_ahull_crop* (2D only) builds a 2D grid of points, then discard   
+all the points that do not fall in the alpha-hull of the actual data.
+
+- *build_grid_ahull_fill* (2D only) same as above, but tries to build a grid 
+with a final number of points approximately equal to the one asked for 
+(parameter `grid_npts`)
+
+
+```{r, echo=FALSE, fig.width=4*2.5, fig.height=4}
+load("meadow.rda")
+
+
+# We project lon/lat to UTM zone 11 (southern california)
+meadow[ ,c('x','y')] <- proj4::project(as.matrix(meadow[ ,c('lon','lat')]), 
+                                    "+proj=utm +zone=11 +ellps=WGS84")  
+
+ggplot(meadow, aes(x,y)) + 
+  geom_point(shape='+') + 
+  ggtitle('Sample points') + 
+  xlab('UTM X') + 
+  ylab('UTM Y')
+```
+
+For this example, we will use samples from a vegetation survey in a meadow 
+in Yosemite National Park, California.
+
+```{r} 
+# We request a grid with approximately this number of points:
+npts <- 500
+base.plot <- ggplot(NULL, aes(x,y)) + 
+               geom_point(data=meadow, shape='+') +
+               xlab('UTM X') + 
+               ylab('UTM Y')
+
+grids <- list(identical  = build_grid_identical(meadow[ ,c('x','y')], npts),
+              squaretile = build_grid_squaretile(meadow[ ,c('x','y')], npts),
+              ahull_crop = build_grid_ahull_crop(meadow[ ,c('x','y')], npts),
+              ahull_fill = build_grid_ahull_fill(meadow[ ,c('x','y')], npts))
+
+plot_grid <- function(grid_type) { 
+  base.plot + 
+    geom_point(data=grids[[grid_type]]) + 
+    annotate('text', x = min(meadow$x), y = min(meadow$y), 
+            label = paste(nrow(grids[[grid_type]]), "points"),
+            hjust = 0, vjust = 1)
+}
+  
+```
+
+- *build_grid_identical*:
+
+```{r, fig.width=4*2.5, fig.height=4}
+plot_grid('identical')
+```
+
+- *build_grid_squaretile* (mind the change of the figure aspect ratio: tiles are
+squares):
+  
+```{r, fig.width=4*2.5, fig.height=4*2.5/4.92}
+plot_grid('squaretile')
+```
+
+- *build_grid_ahull_crop*:
+
+```{r, fig.width=4*2.5, fig.height=4}
+plot_grid('ahull_crop')
+```
+
+- *build_grid_ahull_fill*: takes much longer to run but gives a number of points 
+that correspond approximately to what was requested
+
+```{r, fig.width=4*2.5, fig.height=4}
+plot_grid('ahull_fill')
+```
+
+Let's produce a map of the soil moisture in the meadow: 
+
+```{r, fig.width=4*2.5, fig.height=4}
+# Build a high-resolution grid
+hires_grid <- build_grid_ahull_fill(meadow[ ,c('x','y')], 1e4, 
+                                    grid_opts = list(verbose = TRUE))
+
+# Compute the local average( moisture of the soil (to 40m)
+meadow_roll <- rollply(meadow, ~ x + y, wdw.size = 40,
+                    grid = hires_grid,
+                    summarise, meanvwc.mean = mean(meanvwc, na.rm = TRUE))
+# Plot the map
+ggplot() + 
+  geom_raster(aes(x, y, fill = meanvwc.mean), data = meadow_roll) + 
+  scale_fill_distiller('RdYlGn', type = "div") + 
+  geom_point(aes(x, y), data = meadow, pch = "x", size = 1)
+```
+
+# Notes
+
+## Performance considerations
+
+`rollply` inherits plyr's pros and cons. As in the latter's functions, 
+parallelism is just one argument away (set `.parallel = TRUE` to use the 
+foreach backend). However, rollply does a lot of `data.frame` subsetting and 
+this is still an expensive operation in R. You can however add a 
+`.progress='time'` and have an estimate of how long your coffee break should be.
+
+## Bugs & comments
+
+Rollply is my first package, has well-known bugs and is still in active 
+development! 
+
+Development happens at [github](https://github.com/alexgenin/rollply). Do not 
+hesitate to post issues or pull requests.

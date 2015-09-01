@@ -2,7 +2,7 @@
 % Please edit documentation in R/build_grid_ahull_crop.R
 \name{build_grid_ahull_crop}
 \alias{build_grid_ahull_crop}
-\title{Create a grid within the alpha hull of a set of points.}
+\title{Regular grid in alpha-hull}
 \usage{
 build_grid_ahull_crop(coords, npts, pad = NULL, grid_opts = list(alpha =
   0.3))
@@ -24,6 +24,9 @@ The coordinates of a grid of points as a \code{data.frame} with
         approximately \code{npts} rows and \code{ncol(coords)} columns.
 }
 \description{
+Create a grid within the alpha hull of a set of points.
+}
+\details{
 
 }
 \seealso{

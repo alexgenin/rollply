@@ -1,7 +1,10 @@
 #'
-#' @title Create a grid with regularly-spaced points.
+#' @title Create a grid with square tiles
+#' 
+#' @description Create a rectangular grid with regularly-spaced points (square 
+#'             tiles)
 #'
-#' @param coords A matrix or data.frame of coordinates with two columns
+#' @param coords A matrix or \code{data.frame} of coordinates with two columns
 #' @param npts The approximate total number of points of the output grid 
 #' @param pad Padding on each dimension (a positive number makes a grid
 #'            that is larger than the ranges of the coordinates).

@@ -59,32 +59,36 @@
 #' 
 #' # 2D example
 #' 
-#'# Generate three 2D random walks
-#'dat <- ddply(data.frame(person=c('françois','nicolas','jacques')), ~ person, 
-#'             summarise, 
-#'              time=seq.int(1000),
-#'              x=cumsum(rnorm(1000,0,1)),
-#'              y=cumsum(rnorm(1000,0,1)))
-#'
-#'# Smoothed trajectory over ten time-steps
-#'rollav <- rollply(dat, ~ time | person, wdw.size=10, grid_res=1000,
-#'                  summarise, x=mean(x), y=mean(y))
-#'
-#'ggplot(dat,aes(x,y,color=person)) + 
-#'  geom_point(alpha=.5, shape='+') + 
-#'  geom_path(data=rollav) 
+#' # Generate three 2D random walks
+#' dat <- ddply(data.frame(person=c('francois','nicolas','jacques')), ~ person, 
+#'              summarise, 
+#'               time=seq.int(1000),
+#'               x=cumsum(rnorm(1000,0,1)),
+#'               y=cumsum(rnorm(1000,0,1)))
 #' 
-# # Where did people spend their time ?
-#' fixed_grid <- build_grid(dat[ ,c('x','y')], 5000) # we fix the grid across groups
-#' rollav <- rollply(dat, ~ x + y | person, wdw.size=2, grid=fixed_grid,
-#'                   summarise, time.spent=length(time))
+#' # Smoothed trajectory over ten time-steps
+#' rollav <- rollply(dat, ~ time | person, wdw.size=10, grid_res=1000,
+#'                   summarise, x=mean(x), y=mean(y))
 #' 
-#' ggplot(subset(rollav, time.spent>0)) + 
-#'   geom_point(aes(x,y, color=person, size=time.spent)) + 
-#'   facet_grid(~person)
+#' library(ggplot2)
+#' if (require(ggplot2)) { 
+#' ggplot(dat,aes(x,y,color=person)) + 
+#'   geom_point(alpha=.5, shape='+') + 
+#'   geom_path(data=rollav) 
+#' }
+#'  
+#  # Where did people spend their time ?
+#'  fixed_grid <- build_grid_squaretile(dat[ ,c('x','y')], 2000) # we fix the grid across groups
+#'  rollav <- rollply(dat, ~ x + y | person, wdw.size=2, grid=fixed_grid,
+#'                    summarise, time.spent=length(time))
+#'  
+#' if (require(ggplot2)) { 
+#'   ggplot(subset(rollav, time.spent>0)) + 
+#'     geom_point(aes(x,y, color=person, size=time.spent), alpha = .5) + 
+#'     facet_grid(~person)
+#' }
 #' 
-#' 
-#' # see also vignette(for more examples
+#' # see also vignette(rollply_intro)
 #' 
 #' @useDynLib rollply
 #' @importFrom Rcpp sourceCpp

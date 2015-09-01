@@ -2,8 +2,7 @@
 % Please edit documentation in R/build_grid_identical.R
 \name{build_grid_identical}
 \alias{build_grid_identical}
-\title{Create a regular grid with the same number of points on each
-       dimension.}
+\title{Build a regular grid}
 \usage{
 build_grid_identical(coords, npts, pad = 0, ...)
 }
@@ -23,6 +22,10 @@ The coordinates of a regulary spaced grid of points as a
         \code{ncol(coords)} columns.
 }
 \description{
+Create a regular grid with the same number of points on each
+             dimension.
+}
+\details{
 
 }
 

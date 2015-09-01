@@ -1,5 +1,7 @@
 #'
-#' @title Create a grid within the alpha hull of a set of points.
+#' @title Regular grid in alpha-hull
+#' 
+#' @description Create a grid within the alpha hull of a set of points.
 #' 
 #' @param coords A matrix or data.frame of coordinates with two columns
 #' @param npts The number of points before cropping to the alpha hull shape

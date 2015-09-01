@@ -1,5 +1,5 @@
 Package: rollply
-Title: Rolling-window add-on for plyr.
+Title: Rolling-window add-on for plyr
 Version: 0.3
 Authors@R: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
 Description: Applies an arbitrary function in a rolling window.
@@ -8,12 +8,16 @@ Depends:
 Imports: 
     plyr,
     Rcpp,
-    alphahull,
     scales,
+    alphahull,
     stringr
 License: GPL-2
 LazyData: true
 LinkingTo: Rcpp
 Suggests: testthat,
-    knitr
+          knitr, 
+          proj4, 
+          ggplot2,
+          rgdal,
+          tidyr
 VignetteBuilder: knitr

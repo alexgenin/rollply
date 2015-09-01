@@ -1,5 +1,7 @@
 #'
-#' @title Create a grid within the alpha hull of a set of points.
+#' @title Regular grid in alpha-hull
+#'
+#' @description Create a grid within the alpha hull of a set of points.
 #' 
 #' @param coords A matrix or data.frame of coordinates with two columns
 #' @param npts The approximate number of points of the requested grid
@@ -39,14 +41,14 @@ build_grid_ahull_fill <- function(coords, npts,
   # NB: We rescale everything between 0 and 1 so the given alpha is easy to 
   #     interpret and inahull() works (it has trouble with far-from zero values
   #     it seems).
-  # <!todo!> this introduces a bug in grid_proportional and gives it the 
+  # <!todo!> this introduces a bug in grid_square tile and gives it the 
   # same behavior than grid_identical
   coords.scaled <- apply(coords, 2, scales::rescale, to = c(0,1))
   coords.hull   <- alphahull::ahull(coords.scaled, alpha = opts[['alpha']])
   
   if (verbose) cat('Building grid in alphahull...\n')
   
-  # Iterate to find the best proportional fitting 
+  # Iterate to find the closest number of points
   error <- -1
   run <- 1
   npts_target <- npts

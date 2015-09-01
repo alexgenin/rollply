@@ -1,6 +1,8 @@
 #' 
-#' @title Create a regular grid with the same number of points on each 
-#'        dimension.
+#' @title Build a regular grid
+#' 
+#' @description Create a regular grid with the same number of points on each 
+#'              dimension.
 #' 
 #' @param coords A matrix or data.frame of coordinates
 #' @param npts The approximate total number of points of the output grid 

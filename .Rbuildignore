@@ -1,5 +1,5 @@
+.rsetup
+misc
 .kateproject
 .kateproject.d
-examples
-.git
-pkg
+tools
