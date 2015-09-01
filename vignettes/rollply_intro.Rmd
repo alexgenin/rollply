@@ -21,7 +21,7 @@ knitr::opts_chunk$set(cache=TRUE)
 
 ```{r}
 stopifnot(require(proj4) & require(ggplot2) & require(rgdal) & 
-          require(tidyr) & require(rollply))
+          require(tidyr) & require(rollply) & require(plyr))
 ```
 
 Rollply is a small function built upon plyr's `ddply` function to facilitate 
