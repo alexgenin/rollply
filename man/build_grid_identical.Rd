@@ -7,7 +7,7 @@
 build_grid_identical(coords, npts, pad = 0, ...)
 }
 \arguments{
-\item{coords}{A matrix or data.frame of coordinates}
+\item{coords}{A matrix or data frame of coordinates as columns}
 
 \item{npts}{The approximate total number of points of the output grid}
 
@@ -17,7 +17,7 @@ that is larger than the ranges of the coordinates).}
 \item{...}{other arguments are silently ignored}
 }
 \value{
-The coordinates of a grid of points as a \code{data.frame} with
+The coordinates of a grid of points as a data frame with
         approximately \code{npts} rows and \code{ncol(coords)} columns. Names
         are transfered from the \code{coords} data frame.
 }
