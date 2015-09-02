@@ -1,7 +1,7 @@
 Package: rollply
-Title: Moving-window add-on for plyr
+Title: Moving-Window Add-on for Plyr
 Version: 0.4
-Authors@R: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
+Author: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
 Description: Apply a function in a moving window, then
              combine the results in a data frame.
 Depends:
@@ -10,9 +10,8 @@ Imports:
     plyr,
     Rcpp,
     scales,
-    alphahull,
     stringr
-License: GPL-2
+License: GPL (>=2)
 LazyData: true
 LinkingTo: Rcpp
 Suggests: testthat,
@@ -20,5 +19,8 @@ Suggests: testthat,
           proj4,
           ggplot2,
           rgdal,
-          tidyr
+          tidyr,
+          alphahull
 VignetteBuilder: knitr
+URL: http://alex.lecairn.org/rollply.html, https://github.com/alexgenin/rollply
+BugReports: https://github.com/alexgenin/rollply
