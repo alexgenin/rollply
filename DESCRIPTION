@@ -2,11 +2,11 @@ Package: rollply
 Title: Moving-window add-on for plyr
 Version: 0.4
 Authors@R: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
-Description: Applies a a function in a moving window, over a dataset, then 
-             combine the results.
-Depends: 
+Description: Applies a function in a moving window, then
+             combine the results in a data frame.
+Depends:
     R (>= 3.1.1)
-Imports: 
+Imports:
     plyr,
     Rcpp,
     scales,
@@ -16,8 +16,8 @@ License: GPL-2
 LazyData: true
 LinkingTo: Rcpp
 Suggests: testthat,
-          knitr, 
-          proj4, 
+          knitr,
+          proj4,
           ggplot2,
           rgdal,
           tidyr
