@@ -2,7 +2,7 @@ Package: rollply
 Title: Moving-Window Add-on for Plyr
 Version: 0.4
 Author: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
-Maintainer: "Alexandre Genin <alex@lecairn.org>"
+Maintainer: Alexandre Genin <alex@lecairn.org>
 Description: Apply a function in a moving window, then
              combine the results in a data frame.
 Depends:
