@@ -30,18 +30,18 @@ build_grid_ahull_fill <- function(coords, npts,
                                                    run_max = 20,
                                                    verbose = FALSE)) {
 
-  if ( !require(alphahull) ) {
+  if ( !requireNamespace("alphahull", quietly = TRUE) ) {
     stop('Alpha-hull-based grids require package alphahull')
   }
 
   build_grid_check_vars(coords, npts)
 
-  # Remove duplicates otherwise ahull throws an error
-  coords <- coords[! duplicated(coords), ]
-
   if (ncol(coords)!=2) {
     stop('This type of grid is only implemented for 2 dimensions.')
   }
+
+  # Remove duplicates otherwise ahull throws an error
+  coords <- coords[! duplicated(coords), ]
 
   # Take parameters into account
   opts <- list(alpha = .3, error_tol = .05, run_max = 20, verbose = FALSE)
@@ -90,10 +90,4 @@ build_grid_ahull_fill <- function(coords, npts,
 
   return(grid)
 }
-
-# Debug snippet: makes an output with a plot
-#   plot(hull)
-#   points(grid, col='red', pch=3)
-#   title(paste0('run ', run, ' (error: ',
-#                paste0(round( error * 100 )), '%)', sep=''))
 

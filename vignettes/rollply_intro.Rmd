@@ -19,9 +19,13 @@ vignette: >
 knitr::opts_chunk$set(cache=TRUE)
 ```
 
-```{r}
-stopifnot(require(proj4) & require(ggplot2) & require(rgdal) &
-          require(tidyr) & require(rollply) & require(plyr))
+```{r, output = "none"}
+stopifnot(requireNamespace("proj4", quietly = TRUE) &
+          requireNamespace("ggplot2", quietly = TRUE) &
+          requireNamespace("rgdal", quietly = TRUE) &
+          requireNamespace("tidyr", quietly = TRUE) &
+          requireNamespace("rollply", quietly = TRUE) &
+          requireNamespace("plyr", quietly = TRUE))
 ```
 
 Rollply is a small function built upon plyr's `ddply` function to facilitate
