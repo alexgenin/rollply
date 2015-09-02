@@ -18,17 +18,19 @@ that is larger than the ranges of the coordinates).}
 }
 \value{
 The coordinates of a grid of points as a \code{data.frame} with
-        approximately \code{npts} rows and \code{ncol(coords)} columns.
+        approximately \code{npts} rows and \code{ncol(coords)} columns. Names
+        are transfered from the \code{coords} data frame.
 }
 \description{
-Create a rectangular grid with regularly-spaced points (square
-            tiles)
+Create a rectangular grid of regularly-spaced points (square
+            tiles).
 }
 \details{
 
 }
 \seealso{
-Other grid building functions: \code{\link{build_grid_ahull_crop}};
-  \code{\link{build_grid_ahull_fill}}
+Other grid.building.functions: \code{\link{build_grid_ahull_crop}};
+  \code{\link{build_grid_ahull_fill}};
+  \code{\link{build_grid_identical}}
 }
 

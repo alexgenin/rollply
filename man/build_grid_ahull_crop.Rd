@@ -21,16 +21,22 @@ shape of the alpha hull}
 }
 \value{
 The coordinates of a grid of points as a \code{data.frame} with
-        approximately \code{npts} rows and \code{ncol(coords)} columns.
+        \code{ncol(coords)} columns. Names are transfered from the
+        \code{coords} data frame.
 }
 \description{
 Create a grid within the alpha hull of a set of points.
 }
 \details{
 
+
+This function creates a rectangular grid, then computes the alpha
+         hull of a set of points, and discards all the points of this grid
+         that fall outside of the hull.
 }
 \seealso{
-Other grid building functions: \code{\link{build_grid_ahull_fill}};
+Other grid.building.functions: \code{\link{build_grid_ahull_fill}};
+  \code{\link{build_grid_identical}};
   \code{\link{build_grid_squaretile}}
 }
 

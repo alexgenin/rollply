@@ -1,8 +1,8 @@
 #'
 #' @title Create a grid with square tiles
 #' 
-#' @description Create a rectangular grid with regularly-spaced points (square 
-#'             tiles)
+#' @description Create a rectangular grid of regularly-spaced points (square 
+#'             tiles).
 #'
 #' @param coords A matrix or \code{data.frame} of coordinates with two columns
 #' @param npts The approximate total number of points of the output grid 
@@ -11,13 +11,16 @@
 #' @param ... other arguments are silently ignored
 #' 
 #' @return The coordinates of a grid of points as a \code{data.frame} with 
-#'         approximately \code{npts} rows and \code{ncol(coords)} columns.
+#'         approximately \code{npts} rows and \code{ncol(coords)} columns. Names
+#'         are transfered from the \code{coords} data frame.
 #' 
 #' @family grid building functions
 #' 
-#' 
 #' @export
 build_grid_squaretile <- function(coords, npts, pad = 0, ...) {
+  
+  build_grid_check_vars(coords, npts)
+
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)
   

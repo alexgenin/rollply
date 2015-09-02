@@ -10,16 +10,19 @@
 #'            that is larger than the ranges of the coordinates).
 #' @param ... other arguments are silently ignored
 #'
-#' @return The coordinates of a regulary spaced grid of points as a 
-#'         \code{data.frame} with approximately \code{npts} rows and 
-#'         \code{ncol(coords)} columns.
+#' @return The coordinates of a grid of points as a \code{data.frame} with 
+#'         approximately \code{npts} rows and \code{ncol(coords)} columns. Names
+#'         are transfered from the \code{coords} data frame.
 #'
-#' @family grid builders
+#' @family grid building functions
 #' 
-#'@export
+#' @export
 # 
 
 build_grid_identical <- function(coords, npts, pad = 0, ...) {
+  
+  build_grid_check_vars(coords, npts)
+
   coords.ranges <- apply(coords, 2, range)
   ndims <- ncol(coords)
   
@@ -28,7 +31,7 @@ build_grid_identical <- function(coords, npts, pad = 0, ...) {
   length.onedim <- floor(npts^(1/ndims))
   
   grid.seed <- sapply(seq.int(ncol(coords)), 
-                      build_grid_seed_onedim,coords.ranges,length.onedim,pad,
+                      build_grid_seed_onedim, coords.ranges, length.onedim, pad,
                       simplify = FALSE)
   names(grid.seed) <- colnames(coords)
   

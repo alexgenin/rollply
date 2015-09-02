@@ -22,16 +22,21 @@ build_grid_ahull_fill(coords, npts, pad = NULL, grid_opts = list(alpha =
 }
 \value{
 The coordinates of a grid of points as a \code{data.frame} with
-        approximately \code{npts} rows and \code{ncol(coords)} columns.
+        approximately \code{npts} rows and \code{ncol(coords)} columns. Names
+        are transfered from the \code{coords} data frame.
 }
 \description{
 Create a grid within the alpha hull of a set of points.
 }
 \details{
 
+
+This function computes the alpha hull of a set of points, then
+         iteratively finds the best grid of \code{npts} points fitting in the hull.
 }
 \seealso{
-Other grid building functions: \code{\link{build_grid_ahull_crop}};
+Other grid.building.functions: \code{\link{build_grid_ahull_crop}};
+  \code{\link{build_grid_identical}};
   \code{\link{build_grid_squaretile}}
 }
 

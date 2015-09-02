@@ -3,6 +3,10 @@
 #'
 #' @description Create a grid within the alpha hull of a set of points.
 #' 
+#' @details This function computes the alpha hull of a set of points, then 
+#'          iteratively finds the best grid of \code{npts} points fitting in the hull.
+#'
+#' 
 #' @param coords A matrix or data.frame of coordinates with two columns
 #' @param npts The approximate number of points of the requested grid
 #' @param pad ignored.
@@ -13,7 +17,8 @@
 #'                     \code{verbose} to get some debug output.
 #' 
 #' @return The coordinates of a grid of points as a \code{data.frame} with 
-#'         approximately \code{npts} rows and \code{ncol(coords)} columns.
+#'         approximately \code{npts} rows and \code{ncol(coords)} columns. Names
+#'         are transfered from the \code{coords} data frame.
 #' 
 #' @family grid building functions
 #' 
@@ -24,6 +29,8 @@ build_grid_ahull_fill <- function(coords, npts,
                                                    error_tol = .05, 
                                                    run_max = 20, 
                                                    verbose = FALSE)) {
+  
+  build_grid_check_vars(coords, npts)
   
   # Remove duplicates otherwise ahull throws an error
   coords <- coords[! duplicated(coords), ]

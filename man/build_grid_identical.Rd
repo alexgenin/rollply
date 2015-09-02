@@ -17,9 +17,9 @@ that is larger than the ranges of the coordinates).}
 \item{...}{other arguments are silently ignored}
 }
 \value{
-The coordinates of a regulary spaced grid of points as a
-        \code{data.frame} with approximately \code{npts} rows and
-        \code{ncol(coords)} columns.
+The coordinates of a grid of points as a \code{data.frame} with
+        approximately \code{npts} rows and \code{ncol(coords)} columns. Names
+        are transfered from the \code{coords} data frame.
 }
 \description{
 Create a regular grid with the same number of points on each
@@ -27,5 +27,10 @@ Create a regular grid with the same number of points on each
 }
 \details{
 
+}
+\seealso{
+Other grid.building.functions: \code{\link{build_grid_ahull_crop}};
+  \code{\link{build_grid_ahull_fill}};
+  \code{\link{build_grid_squaretile}}
 }
 
