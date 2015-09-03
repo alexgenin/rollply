@@ -22,7 +22,5 @@ Suggests: testthat,
           rgdal,
           tidyr,
           alphahull
-VignetteBuilder: knitr
 URL: http://alex.lecairn.org/rollply.html, https://github.com/alexgenin/rollply
 BugReports: https://github.com/alexgenin/rollply
-BuildVignettes: no
