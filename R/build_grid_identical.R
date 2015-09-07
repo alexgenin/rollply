@@ -9,15 +9,20 @@
 #' @param pad Padding on each dimension (a positive number makes a grid
 #'            that is larger than the ranges of the coordinates).
 #' @param ... other arguments are silently ignored
-#'
+#' 
 #' @return The coordinates of a grid of points as a data frame with
 #'         approximately \code{npts} rows and \code{ncol(coords)} columns. Names
 #'         are transfered from the \code{coords} data frame.
-#'
+#' 
+#' @details This function creates a grid that covers a set of points. The 
+#'          number of points of the output grid is the same on all dimensions. 
+#'          This is probably the only useful option for 1D moving-window 
+#'          computations.
+#' 
 #' @family grid building functions
 #'
 #' @export
-#
+#'
 
 build_grid_identical <- function(coords, npts, pad = 0, ...) {
 

@@ -3,7 +3,7 @@
 #'
 #' @description Create a rectangular grid of regularly-spaced points (square
 #'             tiles).
-#'
+#' 
 #' @param coords A matrix or \code{data.frame} of coordinates with two columns
 #' @param npts The approximate total number of points of the output grid
 #' @param pad Padding on each dimension (a positive number makes a grid
@@ -13,7 +13,12 @@
 #' @return The coordinates of a grid of points as a \code{data.frame} with
 #'         approximately \code{npts} rows and \code{ncol(coords)} columns. Names
 #'         are transfered from the \code{coords} data frame.
-#'
+#' 
+#' @details This function creates a grid that covers a set of points. The 
+#'          distance between points is the same on all dimensions (tiles are 
+#'          squared. It is only implemented for 2D grid so \code{coords} must
+#'          have at most two columns.
+#' 
 #' @family grid building functions
 #'
 #' @export
