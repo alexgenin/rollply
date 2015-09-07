@@ -27,6 +27,11 @@ Create a regular grid with the same number of points on each
 }
 \details{
 
+
+This function creates a grid that covers a set of points. The
+         number of points of the output grid is the same on all dimensions.
+         This is probably the only useful option for 1D moving-window
+         computations.
 }
 \seealso{
 Other grid.building.functions: \code{\link{build_grid_ahull_crop}};

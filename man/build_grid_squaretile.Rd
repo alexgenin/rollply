@@ -27,6 +27,11 @@ Create a rectangular grid of regularly-spaced points (square
 }
 \details{
 
+
+This function creates a grid that covers a set of points. The
+         distance between points is the same on all dimensions (tiles are
+         squared. It is only implemented for 2D grid so \code{coords} must
+         have at most two columns.
 }
 \seealso{
 Other grid.building.functions: \code{\link{build_grid_ahull_crop}};
