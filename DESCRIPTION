@@ -1,5 +1,5 @@
 Package: rollply
-Title: Moving-Window Add-on for 'Plyr'
+Title: Moving-Window Add-on for 'plyr'
 Version: 0.4.2
 Author: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
 Maintainer: Alexandre Genin <alex@lecairn.org>
