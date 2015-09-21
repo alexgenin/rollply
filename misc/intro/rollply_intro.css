@@ -1,7 +1,7 @@
 body {
   background-color:#585858;
   color:#CCC;
-  margin: 1em auto;
+  margin: 0px auto;
   max-width: 960px;
   overflow: visible;
   padding-left: 2em;
@@ -136,12 +136,12 @@ div.figure {
 }
 img {
   border: 1px solid #DDDDDD;
-  max-width:100%;
+  width:100%;
   margin:10px auto 10px auto;
 }
 
 h1 {
-  margin-top: 0;
+  margin-top: 10px;
   font-size: 35px;
   line-height: 40px;
 }

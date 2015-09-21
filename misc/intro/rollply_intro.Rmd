@@ -20,18 +20,19 @@ knitr::opts_chunk$set(cache=TRUE)
 ```
 
 ```{r, output = "none"}
-stopifnot( !( require(proj4) &
-              require(ggplot2) &
-              require(rgdal) &
-              require(tidyr) &
-              require(rollply) &
-              require(plyr) ) )
+stopifnot(require(proj4) &
+          require(ggplot2) &
+          require(rgdal) &
+          require(tidyr) &
+          require(rollply) &
+          require(plyr) ) 
 ```
 
-Rollply is a small function built upon plyr's `ddply` function to facilitate
-moving-window-based computations. If you have a `data.frame`, give the
-dimensions over which the function the window should move, and rollply will make
-the subsets, apply the function on them and then combine the results.
+Rollply is a small function built upon [plyr](http://plyr.had.co.nz/)'s `ddply` 
+function to facilitate moving-window-based computations. If you have a 
+`data.frame`, give the dimensions over which the function the window should 
+move, and rollply will make the subsets, apply the function on them and then 
+combine the results.
 
 In short, rollply extends the
 [split-apply-combine strategy](http://plyr.had.co.nz/) to moving-window
@@ -73,8 +74,8 @@ And voilà! A rather nice, although a bit depressing, trend line for our data.
 
 Now, this example is a bit silly: if you are working on regularly-spaced time
 series, you might be better off using one of the specialized packages
-(e.g. TTR). However, for a quick-and-dirty approach here Rollply is perfect as
-it only uses standard `data.frame`s.
+(e.g. TTR). However, for a quick-and-dirty approach here rollply is perfect as
+it only uses standard data frames.
 
 Let's take a more complex example.
 
@@ -299,7 +300,7 @@ this is still an expensive operation in R. You can however add a
 
 ## Bugs & comments
 
-Rollply is my first package, has well-known bugs and is still in active
+rollply is my first package, has well-known bugs and is still in active
 development!
 
 Development happens at [github](https://github.com/alexgenin/rollply). Do not
