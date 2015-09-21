@@ -3,18 +3,15 @@
 # Originally written by Alexandre Genin, 2014
 #
 # Note: sometimes parallel computing warns that "..." is used in an
-#   incorrect context. This is probably related to [1] and is unfixed at the
+#   incorrect context. This is probably related to [1] and is unfixed at th
 #   moment.
 #
 # [1] https://github.com/hadley/plyr/issues/203
 #
-#
-#
-#
 #' @title Rollply
 #'
 #' @description Applies a function on data falling in a moving window, then
-#{              combine results in a data.frame.
+#'              combine the results in a data.frame.
 #'
 #' @param .data \code{data.frame} to be processed
 #' @param .rollvars variables describing the moving window: a formula of the
@@ -38,10 +35,21 @@
 #'
 #' @details
 #'
-#' Rollply applies a function one or more variables. It is built internally over ddply and follows a very
-#' similar syntax.
+#' rollply applies a function in a window moving over one or more variables. It
+#' is built upon \code{\link{ddply}} so it inherits many of its useful options
+#' 'such as \code{.parallel} or \code{.progress}.
+#'
+#' rollply will create a grid spanning the coordinates specificied in the
+#' formula. For each point of this grid, it then selects the corresponding
+#' subset of the data frame within \code{wdw.size}, and pass it to the
+#' function \code{fun}. The results are then combined into a data frame.
+#'
+#' In case the user provides a grid, its column names must match the dimension
+#' names specified in the formula (the handling of groups in a user-supplied
+#' grid is not (yet?) implemented.')
 #'
 #' @return
+#'
 #' A named data.frame with the function results at each grid point.
 #'
 #' @examples
