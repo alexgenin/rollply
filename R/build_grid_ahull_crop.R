@@ -1,12 +1,11 @@
-#'
 #' @title Regular grid in alpha-hull
-#'
+#' 
 #' @description Create a grid within the alpha hull of a set of points.
-#'
-#' @details This function creates a rectangular grid, then computes the alpha
-#'          hull of a set of points, and discards all the points of this grid
-#'          that fall outside of the hull.
-#'
+#' 
+#' @details This function creates a rectangular grid over a set of points, then 
+#'   computes the alpha hull of the set of points, and discards all the points 
+#'   of the new grid that fall outside of the hull.
+#' 
 #' @param coords A matrix or data.frame of coordinates with two columns
 #' @param npts The number of points before cropping to the alpha hull shape
 #' @param grid_opts A list with component \code{alpha} that controls the

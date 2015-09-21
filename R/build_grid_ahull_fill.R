@@ -52,8 +52,8 @@ build_grid_ahull_fill <- function(coords, npts,
   # NB: We rescale everything between 0 and 1 so the given alpha is easy to
   #     interpret and inahull() works (it has trouble with far-from zero values
   #     it seems).
-  # <!todo!> this introduces a bug in grid_square tile and gives it the
-  # same behavior than grid_identical
+  # <!todo!> this introduces a bug: it gives grid_squaretile the
+  # same behavior as grid_identical
   coords.scaled <- apply(coords, 2, scales::rescale, to = c(0,1))
   coords.hull   <- alphahull::ahull(coords.scaled, alpha = opts[['alpha']])
 
@@ -64,30 +64,29 @@ build_grid_ahull_fill <- function(coords, npts,
   run <- 1
   npts_target <- npts
   while ( error < - opts[['error_tol']] && run <= opts[['run_max']] ) {
-
+    
     # Compute a grid with the given number of points
     rect_grid <- build_grid_squaretile(coords.scaled, npts)
-
+    
     # Strip points and see how many fall in alphahull
     to_keep <- apply(rect_grid, 1,
                      function(X) alphahull::inahull(coords.hull, X))
     error <- (sum(to_keep) - npts_target) / npts_target
-
+    
     if (verbose) {
       cat(paste0('run ', run,', error=', round(error, digits = 2),
                 '% (', sum(to_keep), ' points)\n'));
     }
-
+    
     # Increase number of points
     run <- run + 1
     npts <- round(npts - error * npts)
   }
-
+  
   # Scale back to original size
   grid <- rect_grid[to_keep, ]
   grid <- data.frame(x = grid[ ,1]*diff(range(coords[ ,1])) + min(coords[ ,1]),
                      y = grid[ ,2]*diff(range(coords[ ,2])) + min(coords[ ,2]))
-
+  
   return(grid)
 }
-

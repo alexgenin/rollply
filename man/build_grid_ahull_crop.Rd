@@ -28,11 +28,9 @@ The coordinates of a grid of points as a \code{data.frame} with
 Create a grid within the alpha hull of a set of points.
 }
 \details{
-
-
-This function creates a rectangular grid, then computes the alpha
-         hull of a set of points, and discards all the points of this grid
-         that fall outside of the hull.
+This function creates a rectangular grid over a set of points, then
+  computes the alpha hull of the set of points, and discards all the points
+  of the new grid that fall outside of the hull.
 }
 \seealso{
 Other grid.building.functions: \code{\link{build_grid_ahull_fill}};

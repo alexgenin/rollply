@@ -40,54 +40,68 @@ for more information on parallelism).}
 \item{...}{other arguments passed to \code{\link{ddply}} and \code{fun}}
 }
 \value{
-A named data.frame with the function results at each grid point.
+A data.frame with the function results at each grid point.
 }
 \description{
 Applies a function on data falling in a moving window, then
+             combine the results in a data.frame.
 }
 \details{
-Rollply applies a function one or more variables. It is built internally over ddply and follows a very
-similar syntax.
+rollply applies a function in a window moving over one or more variables. It
+is built upon \code{\link{ddply}} so it inherits many of its useful options
+'such as \code{.parallel} or \code{.progress}.
+
+rollply will create a grid spanning the coordinates specified in the
+formula. For each point of this grid, it then selects the corresponding
+subset of the data frame within \code{wdw.size}, and pass it to the
+function \code{fun}. The results are then combined into a data frame.
+
+In case the user provides a grid, its column names must match the dimension
+names specified in the formula (the handling of groups in a user-supplied
+grid is not (yet?) implemented.). Grids can be generated using the
+build_grid_* functions family (e.g. \code{\link{build_grid_identical}}).
 }
 \examples{
 library(plyr)
-# 1D example
-dat <- data.frame(time=seq.int(1000),
-                  position=cumsum(rnorm(1000,0,10)))
+
+# 1D example: make a trendline for a time-series
+dat <- data.frame(time     = seq.int(1000),
+                  position = cumsum(rnorm(1000,0,10)))
 
 rollav <- rollply(dat, ~ time, wdw.size=10,
                   summarise, position=mean(position))
 
-plot(position ~ time, data=dat)
-lines(rollav, col='red')
+plot(position ~ time, data = dat, pch = 20)
+lines(rollav, col = 'red')
 
 # 2D example
 
 # Generate three 2D random walks
-dat <- ddply(data.frame(person=c('francois','nicolas','jacques')), ~ person,
-             summarise,
-              time=seq.int(1000),
-              x=cumsum(rnorm(1000,0,1)),
-              y=cumsum(rnorm(1000,0,1)))
+dat <- ddply(data.frame(person = c('francois','nicolas','jacques')),
+             ~ person,
+             summarise, time = seq.int(1000),
+                        x    = cumsum(rnorm(1000,0,1)),
+                        y    = cumsum(rnorm(1000,0,1)))
 
 # Smoothed trajectory over ten time-steps
-rollav <- rollply(dat, ~ time | person, wdw.size=10, grid_res=1000,
-                  summarise, x=mean(x), y=mean(y))
+rollav <- rollply(dat, ~ time | person, wdw.size = 10, grid_res = 1000,
+                  summarise, x = mean(x), y = mean(y))
 
-library(ggplot2)
-if (require(ggplot2)) {
-ggplot(dat,aes(x,y,color=person)) +
-  geom_point(alpha=.5, shape='+') +
-  geom_path(data=rollav)
+if ( require(ggplot2) ) {
+  ggplot(dat, aes(x, y, color = person)) +
+    geom_point(alpha = .5, shape = '+') +
+    geom_path(data = rollav)
 }
 
- fixed_grid <- build_grid_squaretile(dat[ ,c('x','y')], 2000) # we fix the grid across groups
- rollav <- rollply(dat, ~ x + y | person, wdw.size=2, grid=fixed_grid,
-                   summarise, time.spent=length(time))
+# Where did people spend their time ?
+# we pregenerate the grid to fix it across groups
+fixed_grid <- build_grid_squaretile(dat[ ,c('x','y')], 2000)
+rollav <- rollply(dat, ~ x + y | person, wdw.size = 2, grid = fixed_grid,
+                  summarise, time.spent = length(time))
 
-if (require(ggplot2)) {
-  ggplot(subset(rollav, time.spent>0)) +
-    geom_point(aes(x,y, color=person, size=time.spent), alpha = .5) +
+if ( require(ggplot2) ) {
+  ggplot(subset(rollav, time.spent > 0)) +
+    geom_point(aes(x, y, color = person, size = time.spent), alpha = .5) +
     facet_grid(~person)
 }
 
