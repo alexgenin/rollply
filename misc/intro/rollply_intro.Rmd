@@ -20,12 +20,12 @@ knitr::opts_chunk$set(cache=TRUE)
 ```
 
 ```{r, output = "none"}
-stopifnot(require(proj4) &
-          require(ggplot2) &
-          require(rgdal) &
-          require(tidyr) &
-          require(rollply) &
-          require(plyr) ) 
+library(proj4) 
+library(ggplot2) 
+library(rgdal)
+library(tidyr) 
+library(rollply) 
+library(plyr) 
 ```
 
 Rollply is a small function built upon [plyr](http://plyr.had.co.nz/)'s `ddply` 
@@ -70,14 +70,12 @@ hawaii.smoothed <- rollply(hawaii, ~ date, wdw.size = 1,
 CO2.plot + geom_line(aes(date, CO2.mean), data = hawaii.smoothed, color = 'red')
 ```
 
-And voilà! A rather nice, although a bit depressing, trend line for our data.
+And voilà! A rather nice, although a bit depressing, trend line for our data. 
+When working on time-series, this represents an alternative to specialized 
+packages such as `zoo` that also provide tools to apply functions in rolling
+windows. 
 
-Now, this example is a bit silly: if you are working on regularly-spaced time
-series, you might be better off using one of the specialized packages
-(e.g. TTR). However, for a quick-and-dirty approach here rollply is perfect as
-it only uses standard data frames.
-
-Let's take a more complex example.
+Let's take a more complex example that works on two-dimensional data.
 
 ## Exploring french town names
 
@@ -100,7 +98,7 @@ the number of matching towns.
 
 Like `ddply` (in package `plyr`), `rollply` takes care of points 1,2 and 4. We
 just need to define a function that does number 3!
-
+ 
 Let's download a [dataset](http://www.nosdonnees.fr/dataset/listes-des-communes-par-r-gions-d-partements-circonscriptions) of town names with their geographical coordinates:
 
 ```{r, warning=FALSE, results="hide"}

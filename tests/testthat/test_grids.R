@@ -16,6 +16,6 @@ test_that("Common grid_builders test", {
   # Note that R CMD's check do not work with ahull_*, probably due to 
   # mispackaging ?
   for (builder in grid_builders[1:2]) { 
-    expect_is( builder(exampleset,npts=100,pad=0), "data.frame" )
+    expect_is( builder(exampleset, npts=100, pad=0), "data.frame" )
   }
 })

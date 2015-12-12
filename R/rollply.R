@@ -9,27 +9,39 @@
 #  
 #' @title Rollply
 #' 
-#' @description Applies a function on data falling in a moving window, then
-#'              combine the results in a data.frame.
+#' @description Applies a function in a moving window then combines the results 
+#'   in a data.frame.
 #' 
 #' @param .data \code{data.frame} to be processed
-#' @param .rollvars variables describing the moving window: a formula of the
-#'                  form \code{~ a + b | c}, where \code{a} and \code{b} denote
-#'                  the variables used for the rolling window and \code{c} an
-#'                  optional grouping variable
-#' @param fun function to apply
+#' 
+#' @param .rollvars a formula of the form \code{~ a + b + ... | c} describing over
+#'   which variables the window should move. \code{a} and \code{b} denote the 
+#'   variables used for the rolling window and \code{c} an optional grouping 
+#'   variable.
+#'
+#' @param fun function to apply 
+#' 
 #' @param wdw.size window size
+#' 
 #' @param grid data.frame of points at which the computation is done. If
-#'             \code{NULL} then a grid is generated using \code{grid_npts}
-#'             and \code{grid_type}.
-#' @param grid_npts if grid is unspecified, then the number of points for the
-#'                  resolution of the grid to build. Otherwise ignored.
-#' @param grid_type The type of grid to generate
-#' @param grid_opts Options to be passed to the grid-generating function
-#' @param padding padding policy one the edgse of the dataset, one of 'none',
+#'   \code{NULL} then a grid is generated using \code{grid_npts} and 
+#'   \code{grid_type}.
+#' 
+#' @param grid_npts if grid is unspecified, the number of points of the 
+#'   grid to build.
+#' 
+#' @param grid_type The type of grid to generate (one of "squaretile", 
+#'   "identical", "ahull_crop", "ahull_fill").
+#' 
+#' @param grid_opts A list of named options to be passed to the grid-generating
+#'   function.
+#' 
+#' @param padding padding policy at the edges of the dataset, one of 'none',
 #'                'outside', 'inside', or a numeric value
+#' 
 #' @param .parallel whether to use parallel processing (see \code{\link{ddply}}
 #'                  for more information on parallelism).
+#' 
 #' @param ... other arguments passed to \code{\link{ddply}} and \code{fun}
 #' 
 #' @details
@@ -38,22 +50,50 @@
 #' is built upon \code{\link{ddply}} so it inherits many of its useful options
 #' 'such as \code{.parallel} or \code{.progress}.
 #' 
-#' rollply will create a grid spanning the coordinates specified in the
+#' Rollply uses internally a grid spanning the coordinates specified in the
 #' formula. For each point of this grid, it then selects the corresponding
 #' subset of the data frame within \code{wdw.size}, and pass it to the
-#' function \code{fun}. The results are then combined into a data frame.
+#' function \code{fun}. The return values of \code{fun} are then combined into 
+#' a data frame.
 #' 
-#' In case the user provides a grid, its column names must match the dimension
-#' names specified in the formula (the handling of groups in a user-supplied
-#' grid is not (yet?) implemented.). Grids can be generated using the 
-#' build_grid_* functions family (e.g. \code{\link{build_grid_identical}}).
+#' If specified, the grid should have column names matching the ones provided 
+#'   in the left-hand side of the formula. If the grid is unspecified, then 
+#'   rollply automatically computes an appropriate grid depending on the option 
+#'   \code{grid_type}: 
+#'   
+#'   \itemize{
+#'     \item "identical" Creates a grid with an identical number of points on 
+#'       each dimension. 
+#'     \item "squaretile" Creates a grid with square tiles (points are 
+#'       equidistant on all dimensions)
+#'     \item "ahull_crop" Creates a grid with square tiles, then crop the 
+#'       result to the alpha hull of the set of points
+#'     \item "ahull_fill" Same as above, but iteratively tries to return a grid 
+#'       with a number of points similar to what was requests using 
+#'       \code{grid_npts}
+#'    }
+#' 
+#' Each of these grid types correspond to a function with prefix 
+#'   \code{build_grid}. Some of them have options that can be passed by 
+#'   providing a named list as argument \code{grid_opts}.
+#' 
+#' The padding policy indicates what to do at the edges of the dataset. A 
+#'   value of "inside" indicates that no value will be computed when the window
+#'   is not entirely contained within the range of the dataset. This parameter
+#'   does not apply for ahull-based grids.
 #' 
 #' @return
 #' 
-#' A data.frame with the function results at each grid point.
+#' A data.frame with the function results at each grid point. Make sure the 
+#'   function results are fit for merging into a data.frame (i.e. that they can 
+#'   be merged using \code{\link[plyr]{rbind.fill}}).
+#' 
+#' @seealso build_grid_identical, build_grid_squaretile, build_grid_ahull_crop, 
+#'   build_grid_ahull_fill
 #' 
 #' @examples
 #' 
+#' # see also vignette("rollply") for a visual introduction
 #' library(plyr)
 #' 
 #' # 1D example: make a trendline for a time-series
@@ -64,7 +104,7 @@
 #'                   summarise, position=mean(position))
 #' 
 #' plot(position ~ time, data = dat, pch = 20)
-#' lines(rollav, col = 'red')
+#' lines(rollav, col = 'red', lwd = 3)
 #'
 #' # 2D example
 #'
@@ -96,8 +136,7 @@
 #'     geom_point(aes(x, y, color = person, size = time.spent), alpha = .5) +
 #'     facet_grid(~person)
 #' }
-#'
-#' # see also vignette(rollply_intro)
+#' 
 #'
 #' @useDynLib rollply
 #' @importFrom Rcpp sourceCpp
