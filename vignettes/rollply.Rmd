@@ -2,7 +2,7 @@
 title: "A visual introduction to rollply"
 author: "Alexandre Génin <alex@lecairn.org>"
 output:
-  pdf_document:
+  html_document:
     toc: true
 vignette: >
   %\VignetteIndexEntry{rollply}
@@ -28,14 +28,15 @@ library(plyr)
 
 Rollply is a small function built upon [plyr](http://plyr.had.co.nz/)'s `ddply` 
 function to facilitate moving-window-based computations. If you have a 
-`data.frame`, give the dimensions over which the function the window should 
+`data.frame`, give the dimensions over which the window should 
 move, and rollply will make the subsets, apply the function on them and then 
-combine the results.
+combine the results into a data.frame.
 
 In short, rollply extends the 
 [split-apply-combine strategy](http://plyr.had.co.nz/) to moving-window 
 computations, using a similar syntax. This tutorial thus assumes some basic 
-familiarity with `plyr`. Let's start with a simple example.
+familiarity with `plyr`, and in particular the function `ddply`. 
+Let's start with a simple example.
 
 # Examples
 
@@ -69,9 +70,9 @@ hawaii.smoothed <- rollply(hawaii, ~ date, wdw.size = 1,
 CO2.plot + geom_line(aes(date, CO2.mean), data = hawaii.smoothed, color = 'red')
 ```
 
-And voilà! A rather nice, although a bit depressing, trend line for our data. 
+And voilà! A rather nice, although a bit depressing trend line for our data. 
 When working on time-series, this represents an alternative to specialized 
-packages such as `zoo` that also provide tools to apply functions in rolling
+packages such as `zoo` that also provide tools to apply functions over rolling
 windows. 
 
 Let's take a more complex example that works on two-dimensional data.
@@ -79,24 +80,25 @@ Let's take a more complex example that works on two-dimensional data.
 ## Exploring french town names
 
 If you open a map of France, you'll notice that towns and villages
-tend to have names that follow patterns. For instance, Brittany's towns are
+tend to have names that follow patterns. For example, Brittany's towns are
 famous for having names starting with a *"ker-"*. Many towns in
 [Lorraine](https://en.wikipedia.org/wiki/Lorraine_%28region%29) end in *"-ange"*
 (a legacy from the german ending *"-ingen"*).
 
-Can we visually explore the distribution of town names ?
+Can we visually explore the distribution of french towns names ? 
+rollply can help here.
 
 A moving-window approach essentially boils down to the following steps:
 
 1. Build a grid over the whole country
-2. For each point of the grid, take all the towns that are less than xx
-kilometers from it.
+2. For each point of the grid, take all the data poitns (towns) that are less 
+than xx kilometers from it.
 3. Check the names of the towns and count the ones matching a pattern. Return
 the number of matching towns.
 4. Combine the results in a `data.frame`
 
 Like `ddply` (in package `plyr`), `rollply` takes care of points 1,2 and 4. We
-just need to define a function that does number 3!
+just need to define a function that does number 3. 
  
 Let's download a [dataset](http://www.nosdonnees.fr/dataset/listes-des-communes-par-r-gions-d-partements-circonscriptions) of town names with their geographical coordinates:
 
@@ -133,15 +135,19 @@ str(dat)
 ggplot(dat) + geom_point(aes(x, y), alpha=.1)
 ```
 
-Nice, let's see whether *"ker"*-named towns are predominantly in Brittany.
+Nice, let's see whether *"ker"*-named towns mainly occur in Brittany. 
 
 ```{r, fig.width=7, fig.height=6}
-# This is our custom function.
-how_many_with_name <- function(regxp, X) sum(grepl(regxp, X))
 
+# This is our custom function : it accepts a data frame and a regular 
+# expression and returns the number of matches in the column "name", formatted
+# withing a data.frame (this plays well with ddply).
+how_many_with_name <- function(df, regexp) { 
+  data.frame(ker = sum(grepl(regexp, df[ ,'name'])))
+}
 
 dat_roll <- rollply(dat, ~ x + y, wdw.size = 1e4, grid_npts = 10e3,
-                    summarize, ker = how_many_with_name("^ker", name))
+                    how_many_with_name, regexp = "^ker")
 
 ggplot(dat_roll) +
   geom_raster(aes(x, y, fill = ker)) +
@@ -150,28 +156,28 @@ ggplot(dat_roll) +
 
 It seems there are indeed many towns with a name starting with "*ker*" in
 Brittany (and a couple in Alsace/Lorraine, too). However, our plot is pretty
-ugly: we can't see the actual country shape! When nothing is specified,
+ugly: we cannot see the actual country shape! When nothing is specified,
 rollply computes its values over a rectangular grid than spans the maximum width
 and height of the original dataset.
 
-Here, our spatial distribution of towns reflect pretty well the overall shape of 
-the country, so instead of a rectangular grid we can build a grid inside the 
-overall outline (the alpha-hull) of the dataset. Another option would have been 
-to provide a polygon of the country to clip the grid of points.
+Here, the spatial distribution of towns reflects pretty nicely the overall shape 
+of the country, so instead of a building a rectangular grid, we can choose to 
+build it only within the alpha-hull of the set of towns.
 
 ```{r}
 dat_roll <- rollply(dat, ~ x + y, wdw.size = 1e4,
-                    grid_npts = 10e3,
-                    grid_type = "ahull_fill",
-                    grid_opts = list(alpha = .05, # shape parameter for hull
-                                     verbose = TRUE),
-                    summarize, ker = how_many_with_name("^ker", name))
+                    grid_npts = 10e3, # number of grid points 
+                    grid_type = "ahull_fill", # grid type: fills an alpha-hull with the given number of points
+                    grid_opts = list(alpha = .05, # shape parameter of the hull
+                                     verbose = TRUE), 
+                    how_many_with_name, regexp = "^ker")
 ```
 
-Note that building an alpha hull-based grid can be quite slow, as it is built on 
-the pure-R `alphahull` package. However, one can pregenerate grids using the 
-`build_grid_*` functions family and supply them directly to rollply using the 
-`grid` argument, so this computation can be only done once (see below).
+Note that building an alpha hull-based grid can be quite computationally 
+expensive, as it requires iterating to find the suitable number of points. 
+However, one can pregenerate grids using the `build_grid_*` functions family and 
+supply them directly to rollply using the `grid` argument, so this computation 
+can be only done once (see below). 
 
 So, are there really more town named *ker-*something in Brittany than elsewhere?
 I'll let you judge (spoiler: yes!):
@@ -192,16 +198,19 @@ grid as a `data.frame` or rollply will take care of building one automatically.
 Several helper functions are provided to build nice grids, they all start
 with *build_grid_*.
 
-- *build_grid_identical* builds a grid with as many points on each dimension
+- *build_grid_identical* builds a grid with an identical number of points on 
+each dimension
 
-- *build_grid_squaretile* (2D only) builds a grid of points with square tiles
+- *build_grid_squaretile* (2D only) builds a grid of points with square tiles 
+(same distance in X and Y between each points)
 
 - *build_grid_ahull_crop* (2D only) builds a grid of points with square tiles, 
 then discard all the points that do not fall in the alpha-hull of the actual 
 data.
 
 - *build_grid_ahull_fill* (2D only) same as above, but iteratively tries to 
-build a grid with a final number of points approximately equal to the parameter `grid_npts`.
+build a grid with a final number of points approximately equal to 
+the requested number of points (parameter `grid_npts`).
 
 
 ```{r, echo=FALSE, fig.width=4*2.5, fig.height=4}
@@ -227,7 +236,7 @@ npts <- 500
 base.plot <- ggplot(NULL, aes(x,y)) +
                geom_point(data = meadow, shape='+') +
                xlab('UTM X') +
-               ylab('UTM Y')
+               ylab('UTM Y') 
 
 grids <- list(identical  = build_grid_identical(meadow[ ,c('x','y')], npts),
               squaretile = build_grid_squaretile(meadow[ ,c('x','y')], npts),
@@ -259,13 +268,13 @@ plot_grid('squaretile')
 
 - *build_grid_ahull_crop*:
 
-```{r, fig.width=4*2.5, fig.height=4}
+```{r, fig.width=4*2.5, fig.height=4*2.5/4.92}
 plot_grid('ahull_crop')
 ```
 
 - *build_grid_ahull_fill*: 
 
-```{r, fig.width=4*2.5, fig.height=4}
+```{r, fig.width=4*2.5, fig.height=4*2.5/4.92}
 plot_grid('ahull_fill')
 ```
 
@@ -287,8 +296,6 @@ which remains an expensive operation in R.
 
 ## Bugs & comments
 
-rollply is my first package, has well-known bugs and is still in active
-development!
-
-Development happens at [github](https://github.com/alexgenin/rollply). Do not
-hesitate to post issues or pull requests.
+rollply has well-known bugs and is still in active development! Development 
+happens at [github](https://github.com/alexgenin/rollply). Do not hesitate to 
+post issues or pull requests.
