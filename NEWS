@@ -1,5 +1,5 @@
 
-Version 0.4.3
+Version 0.5
   * Many improvements to documentation
   * Added vignette into the package: vignette('rollply')
   * Wrote a c++ equivalent to alphahull::inahull for quicker building of 
