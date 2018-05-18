@@ -1,15 +1,19 @@
+[![Build Status](https://travis-ci.org/alexgenin/rollply.svg?branch=master)](https://travis-ci.org/alexgenin/rollply) 
+
 rollply
 =======
 
 Rollply is an R package built on top on plyr's **ply functions to make
 moving-window based computations easier. Just provide a function that works on
 a data.frame, rollply will take care of building the appropriate subsets and
-apply that function to each of them.
+apply that function to each of them. It will combine the results into 
+a data.frame at the end of the computation.
 
 Some packages out there contain functions that compute moving-window statistics
 (e.g. TTR::SMA), but were not flexible enough for my use and required specific
 time-series classes. Rollply works on generic data.frames and builds upon plyr's
-advantages (parallelism, progress report, etc.).
+advantages (parallelism, progress report, etc.), but also on its weaknesses 
+(it's slow).
 
 In short, it allows writing something like this:
 
@@ -86,5 +90,4 @@ Installation
   library(rollply)
  ```
 
-Rollply is still under heavy development so please be patient in case of
-breakage !
+
