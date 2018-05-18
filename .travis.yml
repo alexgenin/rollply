@@ -1,0 +1,9 @@
+## Travis config file to build a package
+
+language: r
+cache: packages
+r:
+  - release
+  - devel
+after_success:
+  - Rscript -e 'covr::codecov()'
