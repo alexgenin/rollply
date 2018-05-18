@@ -47,7 +47,7 @@ A data.frame with the function results at each grid point. Make sure the
   be merged using \code{\link[plyr]{rbind.fill}}).
 }
 \description{
-Applies a function in a moving window then combines the results 
+Apply a function in a moving window then combine the results 
   in a data.frame.
 }
 \details{
@@ -82,14 +82,13 @@ Each of these grid types correspond to a function with prefix
   \code{build_grid}. Some of them have options that can be passed by 
   providing a named list as argument \code{grid_opts}.
 
-The padding policy indicates what to do at the edges of the dataset. A 
+The padding argument indicates what to do at the edges of the dataset. A 
   value of "inside" indicates that no value will be computed when the window
   is not entirely contained within the range of the dataset. This parameter
-  does not apply for ahull-based grids.
+  does not apply to alphahull-based grids.
 }
 \examples{
 
-# see also vignette("rollply") for a visual introduction
 library(plyr)
 
 # 1D example: make a trendline for a time-series
@@ -139,4 +138,3 @@ if ( require(ggplot2) ) {
 build_grid_identical, build_grid_squaretile, build_grid_ahull_crop, 
   build_grid_ahull_fill
 }
-

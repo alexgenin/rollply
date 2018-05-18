@@ -41,8 +41,7 @@ This function computes the alpha hull of a set of points which is
 \seealso{
 \code{\link[alphahull]{ahull}}
 
-Other grid.building.functions: \code{\link{build_grid_ahull_fill}},
+Other grid building functions: \code{\link{build_grid_ahull_fill}},
   \code{\link{build_grid_identical}},
   \code{\link{build_grid_squaretile}}
 }
-

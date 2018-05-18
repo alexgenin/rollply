@@ -24,7 +24,6 @@ Part of the results of a vegetation survey carried out in Yosemite, CA.
 A Multi-scale Approach to Searching for Disturbance Effects: Pack 
   Stock and Sierra Nevada Meadows. Steven R. Lee, Eric L. Berlow, Steven M. 
   Ostoja, John R. Matchett, Alexandre Genin, Stephen C. Hart, Matthew L. 
-  Brooks (in prep)
+  Brooks. Plos One (2017)
 }
 \keyword{datasets}
-

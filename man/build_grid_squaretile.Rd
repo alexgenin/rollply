@@ -32,8 +32,7 @@ This function creates a grid that covers a set of points. The
          have at most two columns.
 }
 \seealso{
-Other grid.building.functions: \code{\link{build_grid_ahull_crop}},
+Other grid building functions: \code{\link{build_grid_ahull_crop}},
   \code{\link{build_grid_ahull_fill}},
   \code{\link{build_grid_identical}}
 }
-

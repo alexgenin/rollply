@@ -11,7 +11,7 @@ test_that("inahull_cpp works", {
   f = 1
   xy <- as.data.frame(matrix(rnorm(1000)*f, ncol = 2))
   hull <- alphahull::ahull(xy, alpha = .4 * f)
-
+  
   xy.test <- expand.grid(x = seq(-1, 1, length.out = 10)*f*2, 
                          y = seq(-1, 1, length.out = 10)*f*2)
 

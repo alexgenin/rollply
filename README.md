@@ -29,7 +29,7 @@ ggplot(NULL,aes(time,position)) +
   geom_line(color='red', data=rollav)
 ```
 
-![rollply_example: random walk](/misc/random_walk.png?raw=true "Average of a 1D random walk")
+![rollply_example: random walk](/tools/imgs/random_walk.png?raw=true "Average of a 1D random walk")
 
 Rollply supports groups and 2D moving windows too:
 
@@ -50,7 +50,7 @@ ggplot(dat,aes(x,y,color=person)) +
   geom_path(data=rollav)
 ```
 
-![rollply_example: random walk with groups](/misc/random_walk_groups.png?raw=true "Average of 2D random walks")
+![rollply_example: random walk with groups](/tools/imgs/random_walk_groups.png?raw=true "Average of 2D random walks")
 
 ```r
 # Where did people spend their time ?
@@ -64,7 +64,7 @@ ggplot(subset(rollav, time.spent>0)) +
   facet_grid(~person)
 ```
 
-![rollply_example: random walk with 2D window](/misc/random_walk_time_spent.png?raw=true "Time spent in each window")
+![rollply_example: random walk with 2D window](/tools/imgs/random_walk_time_spent.png?raw=true "Time spent in each window")
 
 
 Installation

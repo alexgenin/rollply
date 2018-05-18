@@ -65,8 +65,7 @@ for ( alpha in c( .3, 1, 4, 10) ) {
 \seealso{
 \code{\link[alphahull]{ahull}}
 
-Other grid.building.functions: \code{\link{build_grid_ahull_crop}},
+Other grid building functions: \code{\link{build_grid_ahull_crop}},
   \code{\link{build_grid_identical}},
   \code{\link{build_grid_squaretile}}
 }
-

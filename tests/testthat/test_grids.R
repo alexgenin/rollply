@@ -19,3 +19,4 @@ test_that("Common grid_builders test", {
     expect_is( builder(exampleset, npts=100, pad=0), "data.frame" )
   }
 })
+

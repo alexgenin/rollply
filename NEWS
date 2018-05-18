@@ -1,4 +1,10 @@
 
+Version 0.4.4
+
+  * Small improvements in documentation 
+  * fix a warning when using multiple groups
+  * fix a CRAN requirement regarding local images in README.md
+  
 Version 0.4.3
   * Many improvements to documentation
   * Added vignette into the package: vignette('rollply')

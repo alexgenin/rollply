@@ -25,5 +25,5 @@ Suggests:
     rmarkdown
 URL: http://alex.lecairn.org/rollply.html, https://github.com/alexgenin/rollply
 BugReports: https://github.com/alexgenin/rollply
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 VignetteBuilder: knitr

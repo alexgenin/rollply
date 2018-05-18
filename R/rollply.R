@@ -9,7 +9,7 @@
 #  
 #' @title Rollply
 #' 
-#' @description Applies a function in a moving window then combines the results 
+#' @description Apply a function in a moving window then combine the results 
 #'   in a data.frame.
 #' 
 #' @param .data \code{data.frame} to be processed
@@ -77,10 +77,10 @@
 #'   \code{build_grid}. Some of them have options that can be passed by 
 #'   providing a named list as argument \code{grid_opts}.
 #' 
-#' The padding policy indicates what to do at the edges of the dataset. A 
+#' The padding argument indicates what to do at the edges of the dataset. A 
 #'   value of "inside" indicates that no value will be computed when the window
 #'   is not entirely contained within the range of the dataset. This parameter
-#'   does not apply for ahull-based grids.
+#'   does not apply to alphahull-based grids.
 #' 
 #' @return
 #' 
@@ -93,7 +93,6 @@
 #' 
 #' @examples
 #' 
-#' # see also vignette("rollply") for a visual introduction
 #' library(plyr)
 #' 
 #' # 1D example: make a trendline for a time-series
@@ -153,14 +152,14 @@ rollply <- function(.data,
                     padding   = 'none', # outside/inside/none or value
                     .parallel = FALSE,
                     ...) {  # passed to ddply/fun
-
+  
+  
   vars <- parse_formula(.rollvars, enclos=parent.frame())
 
   check_args(vars, .data, grid, grid_type, wdw.size)
-
   # Handle groups: if we provide groups, then we call rollply within each
   # groups using ddply.
-  if ( ! is.na(vars[["groups"]]) ) {
+  if ( ! all(is.na(vars[["groups"]])) ) {
     # Build new argument list
     args.grps <- as.list(match.call(), expand.dots=TRUE)
     # Pass the group argument of the formula as the group to ddply and delete
@@ -171,13 +170,13 @@ rollply <- function(.data,
     # Call ddply
     return( do.call(plyr::ddply, args.grps, envir=parent.frame()) )
   }
-
+  
   # We extract variables used for computing and build a matrix
   # <!todo!> Add check that variables used for rolling windows are numeric!
   coords <- plyr::eval.quoted(vars[["coords"]],
                               envir=as.data.frame(.data))
   coords <- do.call(cbind, coords)
-
+  
   # Set the number of points for the grid
   if ( is.null(grid_npts) ) {
     coords_span <- apply(coords, 2, function(x) diff(range(x)))
@@ -194,7 +193,7 @@ rollply <- function(.data,
                       inside  = - wdw.size / 2,
                       none    = 0)
   }
-
+  
   # Build output grid
   if (is.null(grid)) {
     grid <- build_grid(grid_type, coords, grid_npts, padding, grid_opts)
@@ -209,6 +208,6 @@ rollply <- function(.data,
   result <- plyr::ddply(grid, names(grid),
                         do_rollply, coords, wdw.size, .data, fun,
                         ...)
-
+  
   return(result)
 }
