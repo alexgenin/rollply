@@ -5,5 +5,9 @@ cache: packages
 r:
   - release
   - devel
+before_install:
+  - sudo apt-get install libgdal1-dev libproj-dev
 after_success:
   - Rscript -e 'covr::codecov()'
+
+# sudo apt-get install libgdal1-dev libproj-dev
