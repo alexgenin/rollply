@@ -1,6 +1,6 @@
 
 library(rollply)
-context('Grid building: grid_identical')
+context('Grid building')
 
 # Define some sets of points
 exampleset <- data.frame(x = seq.int(0,1,l=100), 

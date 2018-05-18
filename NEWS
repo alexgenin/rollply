@@ -1,13 +1,15 @@
 
-Version 0.4.4
+Version 0.5.1
 
   * Small improvements in documentation 
   * fix a warning when using multiple groups
   * fix a CRAN requirement regarding local images in README.md
   
-Version 0.4.3
+Version 0.5.0
+
   * Many improvements to documentation
-  * Added vignette into the package: vignette('rollply')
+  * Added vignette intro the package: vignette('rollply')
+  * Fixed some issues regarding the creation of grids
   * Wrote a c++ equivalent to alphahull::inahull for quicker building of 
       grids based on alpha hull
 

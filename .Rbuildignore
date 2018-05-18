@@ -4,3 +4,5 @@ misc
 .kateproject.d
 tools
 ^codecov\.yml$
+cran-comments.md
+rollply_0.5.0.tar.gz
