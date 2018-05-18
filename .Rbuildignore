@@ -2,7 +2,6 @@
 misc
 .kateproject
 .kateproject.d
-tools
 ^codecov\.yml$
 cran-comments.md
 ^rollply_.*.tar.gz$
