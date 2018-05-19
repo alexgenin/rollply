@@ -1,18 +1,18 @@
+This is a minor update (v0.5.0 -> v0.5.1) to rollply that provides 
+the following changes: 
 
-# Release Summary
-
-This updated version of rollply brings the following improvements :
-  * documentation is greatly improved (incorrect documentation was generated
-      in rollply 0.4.2).
-  * a vignette is now included in the package ( vignette('rollply') )
-  * some issues were fixed regarding the creation of grids
-  * an internal implementation of alphahull::inahull is now used to provide
-      much quicker generation of alphahull-based grids.
+  * Small improvements in documentation 
+  * fix a warning when using multiple groups
+  * fix a CRAN requirement regarding local images in README.md 
+    (email sent about it)
 
 # Test environments and results
 
-* Local install (R 3.2.3 on Arch Linux as of 2016-03-23)
+* Local install (R 3.5.0 on Arch Linux as of 2018-05-20)
   No error or warnings (R CMD check status: OK).
 
-* win-builder (R-devel and R-release as of 2016-03-24)
+* win-builder (R-devel and R-release as of 2018-05-20)
+  No error or warnings (R CMD check status: OK).
+
+* Travis-CI service (R-devel and R-release as of 2018-05-20)
   No error or warnings (R CMD check status: OK).
