@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/alexgenin/rollply.svg?branch=master)](https://travis-ci.org/alexgenin/rollply) 
+[![Build Status](https://travis-ci.org/alexgenin/rollply.svg?branch=master)](https://travis-ci.org/alexgenin/rollply)
 
 rollply
 =======
@@ -6,13 +6,13 @@ rollply
 Rollply is an R package built on top on plyr's **ply functions to make
 moving-window based computations easier. Just provide a function that works on
 a data.frame, rollply will take care of building the appropriate subsets and
-apply that function to each of them. It will combine the results into 
+apply that function to each of them. It will combine the results into
 a data.frame at the end of the computation.
 
 Some packages out there contain functions that compute moving-window statistics
 (e.g. TTR::SMA), but were not flexible enough for my use and required specific
 time-series classes. Rollply works on generic data.frames and builds upon plyr's
-advantages (parallelism, progress report, etc.), but also on its weaknesses 
+advantages (parallelism, progress report, etc.), but also on its weaknesses
 (it's slow).
 
 In short, it allows writing something like this:
@@ -33,7 +33,7 @@ ggplot(NULL,aes(time,position)) +
   geom_line(color='red', data=rollav)
 ```
 
-![rollply_example: random walk](/tools/imgs/random_walk.png?raw=true "Average of a 1D random walk")
+![rollply_example: random walk](/tools/imgs/random_walk.png "Average of a 1D random walk")
 
 Rollply supports groups and 2D moving windows too:
 
@@ -54,7 +54,7 @@ ggplot(dat,aes(x,y,color=person)) +
   geom_path(data=rollav)
 ```
 
-![rollply_example: random walk with groups](/tools/imgs/random_walk_groups.png?raw=true "Average of 2D random walks")
+![rollply_example: random walk with groups](/tools/imgs/random_walk_groups.png "Average of 2D random walks")
 
 ```r
 # Where did people spend their time ?
@@ -68,7 +68,7 @@ ggplot(subset(rollav, time.spent>0)) +
   facet_grid(~person)
 ```
 
-![rollply_example: random walk with 2D window](/tools/imgs/random_walk_time_spent.png?raw=true "Time spent in each window")
+![rollply_example: random walk with 2D window](/tools/imgs/random_walk_time_spent.png "Time spent in each window")
 
 
 Installation

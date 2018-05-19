@@ -5,3 +5,4 @@ misc
 ^codecov\.yml$
 cran-comments.md
 ^rollply_.*.tar.gz$
+.travis.yml

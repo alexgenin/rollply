@@ -284,7 +284,7 @@ Note that the outline as given by the alpha-hull of a set of points depends on
 a parameter, `alpha` that determines its intrincateness. A reasonable default
 is provided, but it is a good idea to try different values to get an idea of 
 the best fit. For more information on the alpha hull, please refer to the 
-[package](https://cran.r-project.org/web/packages/alphahull/alphahull.pdf) 
+[package](https://CRAN.R-project.org/package=alphahull) 
 documentation. 
 
 # Notes
