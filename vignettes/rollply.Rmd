@@ -49,7 +49,9 @@ environmentally-conscious example.
 
 ```{r, fig.width=7, fig.height=4}
 # Download and format data
-url <- "ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt"
+# FTP access does not work on Travis so we use a copy of this dataset
+# url <- "ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt"
+url <- "https://alex.lecairn.org/co2_mm_mlo.txt"
 hawaii <- read.table(url)[ ,c(3,4)]
 names(hawaii) <- c('date','CO2')
 hawaii[hawaii$CO2 < 0, "CO2"] <- NA # mark NAs as such
