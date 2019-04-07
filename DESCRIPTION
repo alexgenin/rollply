@@ -1,6 +1,7 @@
 Package: rollply
+Encoding: UTF-8
 Title: Moving-Window Add-on for 'plyr'
-Version: 0.5.1
+Version: 0.5.2
 Author: "Alexandre Genin <alex@lecairn.org> [aut, cre]"
 Maintainer: Alexandre Genin <alex@lecairn.org>
 Description: Apply a function in a moving window, then
@@ -26,5 +27,4 @@ Suggests:
     covr
 URL: http://alex.lecairn.org/rollply.html, https://github.com/alexgenin/rollply
 BugReports: https://github.com/alexgenin/rollply
-RoxygenNote: 6.0.1
-VignetteBuilder: knitr
+RoxygenNote: 6.1.1

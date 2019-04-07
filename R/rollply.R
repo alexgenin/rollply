@@ -37,10 +37,10 @@
 #'   function.
 #' 
 #' @param padding padding policy at the edges of the dataset, one of 'none',
-#'                'outside', 'inside', or a numeric value
+#'   'outside', 'inside', or a numeric value
 #' 
 #' @param .parallel whether to use parallel processing (see \code{\link{ddply}}
-#'                  for more information on parallelism).
+#'   for more information on parallelism).
 #' 
 #' @param ... other arguments passed to \code{\link{ddply}} and \code{fun}
 #' 
@@ -89,7 +89,9 @@
 #'   be merged using \code{\link[plyr]{rbind.fill}}).
 #' 
 #' @seealso build_grid_identical, build_grid_squaretile, build_grid_ahull_crop, 
-#'   build_grid_ahull_fill
+#'   build_grid_ahull_fill, 
+#'   
+#'   \href{http://alex.lecairn.org/rollply.html}{Rollply tutorial}
 #' 
 #' @examples
 #' 

@@ -136,5 +136,7 @@ if ( require(ggplot2) ) {
 }
 \seealso{
 build_grid_identical, build_grid_squaretile, build_grid_ahull_crop, 
-  build_grid_ahull_fill
+  build_grid_ahull_fill, 
+  
+  \href{http://alex.lecairn.org/rollply.html}{Rollply tutorial}
 }

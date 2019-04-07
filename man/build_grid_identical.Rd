@@ -36,3 +36,4 @@ Other grid building functions: \code{\link{build_grid_ahull_crop}},
   \code{\link{build_grid_ahull_fill}},
   \code{\link{build_grid_squaretile}}
 }
+\concept{grid building functions}

@@ -4,8 +4,8 @@
 \alias{build_grid_ahull_crop}
 \title{Regular grid in alpha-hull}
 \usage{
-build_grid_ahull_crop(coords, npts, pad = NULL, grid_opts = list(alpha =
-  0.3, scale_alpha = TRUE))
+build_grid_ahull_crop(coords, npts, pad = NULL, grid_opts = list(alpha
+  = 0.3, scale_alpha = TRUE))
 }
 \arguments{
 \item{coords}{A matrix or data.frame of coordinates with two columns}
@@ -45,3 +45,4 @@ Other grid building functions: \code{\link{build_grid_ahull_fill}},
   \code{\link{build_grid_identical}},
   \code{\link{build_grid_squaretile}}
 }
+\concept{grid building functions}
