@@ -17,9 +17,9 @@ check_coords <- function(coords, grid) {
   }
   
   # Check for the presence of NA's
-  na_in_coords <- apply(coords, 2, function(X) any(is.na(X)))
-  if (! is.null(grid) ) {
-    na_in_grid   <- apply(grid, 2, function(X) any(is.na(X)))
+  na_in_coords <- any( apply(coords, 2, function(X) any(is.na(X))) )
+  if ( ! is.null(grid) ) {
+    na_in_grid <- any( apply(grid, 2, function(X) any(is.na(X))) )
   } else { 
     na_in_grid <- FALSE
   }
