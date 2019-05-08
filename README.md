@@ -74,12 +74,7 @@ ggplot(subset(rollav, time.spent>0)) +
 Installation
 ----
 
- - From CRAN (recommended):
-```r
-  install.packages('rollply')
-```
-
- - Development version from github:
+ The best way to install rollply is from github: 
 
  ```r
   if ( !require(devtools) ) {
@@ -89,5 +84,8 @@ Installation
   install_github('alexgenin/rollply')
   library(rollply)
  ```
+
+The CRAN version has been deprecated as I do not have currently the time to fix the CRAN-related issues. It may 
+come back at a later stage. 
 
 
